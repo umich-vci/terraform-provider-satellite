@@ -48,6 +48,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"satellite_organization": resourceOrganization(),
+			"satellite_role":         resourceRole(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"satellite_organization": dataSourceOrganization(),
