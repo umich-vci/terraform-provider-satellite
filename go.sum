@@ -251,6 +251,10 @@ github.com/umich-vci/gosatellite v0.0.0-20200221205746-df41086d759c h1:CgI4CkY5b
 github.com/umich-vci/gosatellite v0.0.0-20200221205746-df41086d759c/go.mod h1:TohOLu+/+VkIGYnCYxSflB+QRw+rT48jchS/wXad3MI=
 github.com/umich-vci/gosatellite v0.0.0-20200221210056-56c86e536c17 h1:FT+xg4cQLbHqDMSE/gfv5WLYmzBnNiylZEAkWq+M4Lo=
 github.com/umich-vci/gosatellite v0.0.0-20200221210056-56c86e536c17/go.mod h1:TohOLu+/+VkIGYnCYxSflB+QRw+rT48jchS/wXad3MI=
+github.com/umich-vci/gosatellite v0.0.0-20200224155347-2b5b2f805cec h1:HIwJL8cZemHI1h7fGnkzAGMir64LWi/U5beL7QbEio4=
+github.com/umich-vci/gosatellite v0.0.0-20200224155347-2b5b2f805cec/go.mod h1:TohOLu+/+VkIGYnCYxSflB+QRw+rT48jchS/wXad3MI=
+github.com/umich-vci/gosatellite v0.0.0-20200224162323-596d57ac34b2 h1:1vgecEBgC8PlHTIOZpPhlBpZhM07vhKZiyP17MDkq3o=
+github.com/umich-vci/gosatellite v0.0.0-20200224162323-596d57ac34b2/go.mod h1:TohOLu+/+VkIGYnCYxSflB+QRw+rT48jchS/wXad3MI=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
 github.com/vmihailenco/msgpack v4.0.1+incompatible h1:RMF1enSPeKTlXrXdOcqjFUElywVZjjC6pqse21bKbEU=
 github.com/vmihailenco/msgpack v4.0.1+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
