@@ -134,10 +134,62 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("permission_ids", filter.Permissions)
 	d.Set("search", filter.Search)
 	d.Set("created_at", filter.CreatedAt)
-	d.Set("locations", filter.Locations)
-	d.Set("organizations", filter.Organizations)
+
+	locationsList := []map[string]string{}
+	for _, x := range *filter.Organizations {
+		location := map[string]string{}
+		if x.Description != nil {
+			location["description"] = *x.Description
+		}
+		if x.ID != nil {
+			location["id"] = strconv.Itoa(*x.ID)
+		}
+		if x.Name != nil {
+			location["name"] = *x.Name
+		}
+		if x.Title != nil {
+			location["title"] = *x.Title
+		}
+		locationsList = append(locationsList, location)
+	}
+	d.Set("locations", locationsList)
+
+	organizationList := []map[string]string{}
+	for _, x := range *filter.Organizations {
+		organization := map[string]string{}
+		if x.Description != nil {
+			organization["description"] = *x.Description
+		}
+		if x.ID != nil {
+			organization["id"] = strconv.Itoa(*x.ID)
+		}
+		if x.Name != nil {
+			organization["name"] = *x.Name
+		}
+		if x.Title != nil {
+			organization["title"] = *x.Title
+		}
+		organizationList = append(organizationList, organization)
+	}
+	d.Set("organizations", organizationList)
+
 	d.Set("resource_type", filter.ResourceType)
-	d.Set("role", filter.Role)
+
+	role := map[string]string{}
+	if filter.Role.Description != nil {
+		role["description"] = *filter.Role.Description
+	}
+	if filter.Role.ID != nil {
+		role["id"] = strconv.Itoa(*filter.Role.ID)
+	}
+	if filter.Role.Name != nil {
+		role["id"] = *filter.Role.Name
+	}
+	if filter.Role.Origin != nil {
+		role["origin"] = *filter.Role.Origin
+	}
+	d.Set("role", role)
+
 	d.Set("unlimited", filter.Unlimited)
 	d.Set("updated_at", filter.UpdatedAt)
 
