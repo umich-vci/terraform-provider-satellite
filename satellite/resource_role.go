@@ -97,8 +97,12 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	role, _, err := client.Roles.GetRoleByID(context.Background(), roleID)
+	role, resp, err := client.Roles.GetRoleByID(context.Background(), roleID)
 	if err != nil {
+		if resp.StatusCode == 404 {
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
