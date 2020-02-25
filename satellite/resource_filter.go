@@ -265,7 +265,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 	permNames := d.Get("permission_names").(*schema.Set).List()
-	var permMap map[string]int
+	permMap := make(map[string]int)
 	var permIDs []int
 	for _, x := range *validPermissions.Results {
 		permMap[*x.Name] = *x.ID
@@ -380,7 +380,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 			return err
 		}
 		permNames := d.Get("permission_names").(*schema.Set).List()
-		var permMap map[string]int
+		permMap := make(map[string]int)
 		var permIDs []int
 		for _, x := range *validPermissions.Results {
 			permMap[*x.Name] = *x.ID
