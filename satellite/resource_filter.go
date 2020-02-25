@@ -2,9 +2,11 @@ package satellite
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/umich-vci/gosatellite"
 )
 
@@ -16,9 +18,22 @@ func resourceFilter() *schema.Resource {
 		Delete: resourceFilterDelete,
 
 		Schema: map[string]*schema.Schema{
+			"permission_names": &schema.Schema{
+				Type:     schema.TypeSet,
+				Required: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"role_id": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
+			},
+			"resource_type": &schema.Schema{
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice(resourceTypeList, false),
 			},
 			"location_ids": &schema.Schema{
 				Type:     schema.TypeSet,
@@ -37,13 +52,6 @@ func resourceFilter() *schema.Resource {
 			"override": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
-			},
-			"permission_ids": &schema.Schema{
-				Type:     schema.TypeSet,
-				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeInt,
-				},
 			},
 			"search": &schema.Schema{
 				Type:     schema.TypeString,
@@ -73,9 +81,22 @@ func resourceFilter() *schema.Resource {
 					},
 				},
 			},
-			"resource_type": &schema.Schema{
-				Type:     schema.TypeString,
+			"permissions": &schema.Schema{
+				Type:     schema.TypeList,
 				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeMap,
+					Elem: &schema.Schema{
+						Type: schema.TypeString,
+					},
+				},
+			},
+			"permission_ids": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 			},
 			"role": &schema.Schema{
 				Type:     schema.TypeMap,
@@ -116,27 +137,59 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	var locationIDs []int
-	var organizationIDs []int
+	// set values we can directly set from struct
+	d.Set("role_id", filter.Role.ID)
+	d.Set("search", filter.Search)
+	d.Set("created_at", filter.CreatedAt)
+	d.Set("override", filter.Override)
+	d.Set("resource_type", filter.ResourceType)
+	d.Set("unlimited", filter.Unlimited)
+	d.Set("updated_at", filter.UpdatedAt)
 
+	// set location_ids
+	var locationIDs []int
 	for _, x := range *filter.Locations {
 		locationIDs = append(locationIDs, *x.ID)
 	}
+	d.Set("location_ids", locationIDs)
 
+	// set organization_ids
+	var organizationIDs []int
 	for _, x := range *filter.Organizations {
 		organizationIDs = append(organizationIDs, *x.ID)
 	}
-
-	d.Set("role_id", filter.Role.ID)
-	d.Set("location_ids", locationIDs)
 	d.Set("organization_ids", organizationIDs)
-	d.Set("override", filter.Override)
-	d.Set("permission_ids", filter.Permissions)
-	d.Set("search", filter.Search)
-	d.Set("created_at", filter.CreatedAt)
 
+	//set permission_ids and permission_names
+	var permNames []string
+	var permIDs []int
+	for _, x := range *filter.Permissions {
+		permNames = append(permNames, *x.Name)
+		permIDs = append(permIDs, *x.ID)
+	}
+	d.Set("permission_ids", permIDs)
+	d.Set("permission_names", permNames)
+
+	// set permissions
+	permissionsList := []map[string]string{}
+	for _, x := range *filter.Permissions {
+		permission := map[string]string{}
+		if x.ID != nil {
+			permission["id"] = strconv.Itoa(*x.ID)
+		}
+		if x.Name != nil {
+			permission["name"] = *x.Name
+		}
+		if x.ResourceType != nil {
+			permission["resource_type"] = *x.ResourceType
+		}
+		permissionsList = append(permissionsList, permission)
+	}
+	d.Set("permissions", permissionsList)
+
+	// set locations
 	locationsList := []map[string]string{}
-	for _, x := range *filter.Organizations {
+	for _, x := range *filter.Locations {
 		location := map[string]string{}
 		if x.Description != nil {
 			location["description"] = *x.Description
@@ -154,6 +207,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("locations", locationsList)
 
+	// set organizations
 	organizationList := []map[string]string{}
 	for _, x := range *filter.Organizations {
 		organization := map[string]string{}
@@ -173,8 +227,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("organizations", organizationList)
 
-	d.Set("resource_type", filter.ResourceType)
-
+	//set role
 	role := map[string]string{}
 	if filter.Role.Description != nil {
 		role["description"] = *filter.Role.Description
@@ -183,15 +236,12 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 		role["id"] = strconv.Itoa(*filter.Role.ID)
 	}
 	if filter.Role.Name != nil {
-		role["id"] = *filter.Role.Name
+		role["name"] = *filter.Role.Name
 	}
 	if filter.Role.Origin != nil {
 		role["origin"] = *filter.Role.Origin
 	}
 	d.Set("role", role)
-
-	d.Set("unlimited", filter.Unlimited)
-	d.Set("updated_at", filter.UpdatedAt)
 
 	return nil
 }
@@ -203,9 +253,32 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	roleID := d.Get("role_id").(int)
-
+	resourceType := d.Get("resource_type").(string)
 	createBody := new(gosatellite.FilterCreate)
 	createBody.Filter.RoleID = &roleID
+
+	// validate the permission names passed in
+	permSearchBody := new(gosatellite.PermissionsSearch)
+	permSearchBody.ResourceType = &resourceType
+	validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
+	if err != nil {
+		return err
+	}
+	permNames := d.Get("permission_names").(*schema.Set).List()
+	var permMap map[string]int
+	var permIDs []int
+	for _, x := range *validPermissions.Results {
+		permMap[*x.Name] = *x.ID
+	}
+	for x := range permNames {
+		if permID, ok := permMap[permNames[x].(string)]; ok {
+			permIDs = append(permIDs, permID)
+		} else {
+			return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
+
+		}
+	}
+	createBody.Filter.PermissionIDs = &permIDs
 
 	if loc, ok := d.GetOk("location_ids"); ok {
 		rawLocationIDs := loc.(*schema.Set).List()
@@ -228,15 +301,6 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	if ovr, ok := d.GetOk("override"); ok {
 		override := ovr.(bool)
 		createBody.Filter.Override = &(override)
-	}
-
-	if perm, ok := d.GetOk("permission_ids"); ok {
-		rawPermissionIDs := perm.(*schema.Set).List()
-		permissionIDs := []int{}
-		for x := range rawPermissionIDs {
-			permissionIDs = append(permissionIDs, rawPermissionIDs[x].(int))
-		}
-		createBody.Filter.PermissionIDs = &permissionIDs
 	}
 
 	if srch, ok := d.GetOk("search"); ok {
@@ -264,6 +328,8 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	resourceType := d.Get("resource_type").(string)
 
 	updateBody := new(gosatellite.FilterUpdate)
 
@@ -305,17 +371,29 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	if d.HasChange("permission_ids") {
-		if perm, ok := d.GetOk("permission_ids"); ok {
-			rawPermissionIDs := perm.(*schema.Set).List()
-			permissionIDs := []int{}
-			for x := range rawPermissionIDs {
-				permissionIDs = append(permissionIDs, rawPermissionIDs[x].(int))
-			}
-			updateBody.Filter.PermissionIDs = &permissionIDs
-		} else {
-			updateBody.Filter.PermissionIDs = new([]int)
+	if d.HasChange("permission_names") {
+		// validate the permission names passed in
+		permSearchBody := new(gosatellite.PermissionsSearch)
+		permSearchBody.ResourceType = &resourceType
+		validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
+		if err != nil {
+			return err
 		}
+		permNames := d.Get("permission_names").(*schema.Set).List()
+		var permMap map[string]int
+		var permIDs []int
+		for _, x := range *validPermissions.Results {
+			permMap[*x.Name] = *x.ID
+		}
+		for x := range permNames {
+			if permID, ok := permMap[permNames[x].(string)]; ok {
+				permIDs = append(permIDs, permID)
+			} else {
+				return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
+
+			}
+		}
+		updateBody.Filter.PermissionIDs = &permIDs
 	}
 
 	if d.HasChange("search") {
@@ -352,4 +430,73 @@ func resourceFilterDelete(d *schema.ResourceData, meta interface{}) error {
 	d.SetId("")
 
 	return nil
+}
+
+var resourceTypeList = []string{
+	"AnsibleRole",
+	"AnsibleVariable",
+	"Architecture",
+	"Audit",
+	"AuthSource",
+	"Bookmark",
+	"ComputeProfile",
+	"ComputeResource",
+	"ConfigGroup",
+	"ConfigReport",
+	"DiscoveryRule",
+	"Domain",
+	"Environment",
+	"ExternalUsergroup",
+	"FactValue",
+	"Filter",
+	"ForemanOpenscap::ArfReport",
+	"ForemanOpenscap::Policy",
+	"ForemanOpenscap::ScapContent",
+	"ForemanOpenscap::TailoringFile",
+	"ForemanTasks::RecurringLogic",
+	"ForemanTasks::Task",
+	"ForemanVirtWhoConfigure::Config",
+	"Host",
+	"HostClass",
+	"Hostgroup",
+	"HttpProxy",
+	"Image",
+	"JobInvocation",
+	"JobTemplate",
+	"Katello::ActivationKey",
+	"Katello::ContentView",
+	"Katello::GpgKey",
+	"Katello::HostCollection",
+	"Katello::KTEnvironment",
+	"Katello::Product",
+	"Katello::Subscription",
+	"Katello::SyncPlan",
+	"KeyPair",
+	"Location",
+	"MailNotification",
+	"Medium",
+	"Model",
+	"Operatingsystem",
+	"Organization",
+	"Parameter",
+	"PersonalAccessToken",
+	"ProvisioningTemplate",
+	"Ptable",
+	"Puppetclass",
+	"PuppetclassLookupKey",
+	"Realm",
+	"RemoteExecutionFeature",
+	"Report",
+	"ReportTemplate",
+	"Role",
+	"Setting",
+	"SmartProxy",
+	"SshKey",
+	"Subnet",
+	"Template",
+	"TemplateInvocation",
+	"Trend",
+	"User",
+	"Usergroup",
+	"VariableLookupKey",
 }
