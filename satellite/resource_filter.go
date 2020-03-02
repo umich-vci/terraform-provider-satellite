@@ -438,6 +438,7 @@ func resourceFilterDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 var resourceTypeList = []string{
+	"",
 	"AnsibleRole",
 	"AnsibleVariable",
 	"Architecture",
