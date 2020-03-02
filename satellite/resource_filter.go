@@ -137,12 +137,19 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
+	var resourceType string
+	if filter.ResourceType == nil {
+		resourceType = ""
+	} else {
+		resourceType = *filter.ResourceType
+	}
+
 	// set values we can directly set from struct
 	d.Set("role_id", filter.Role.ID)
 	d.Set("search", filter.Search)
 	d.Set("created_at", filter.CreatedAt)
 	d.Set("override", filter.Override)
-	d.Set("resource_type", filter.ResourceType)
+	d.Set("resource_type", resourceType)
 	d.Set("unlimited", filter.Unlimited)
 	d.Set("updated_at", filter.UpdatedAt)
 
@@ -260,6 +267,10 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	// validate the permission names passed in
 	permSearchBody := new(gosatellite.PermissionsSearch)
 	permSearchBody.ResourceType = &resourceType
+	if resourceType == "" {
+		perPage := 400
+		permSearchBody.PerPage = &perPage
+	}
 	validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
 	if err != nil {
 		return err
@@ -268,14 +279,19 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	permMap := make(map[string]int)
 	var permIDs []int
 	for _, x := range *validPermissions.Results {
-		permMap[*x.Name] = *x.ID
+		if resourceType == "" {
+			if x.ResourceType == nil {
+				permMap[*x.Name] = *x.ID
+			}
+		} else {
+			permMap[*x.Name] = *x.ID
+		}
 	}
 	for x := range permNames {
 		if permID, ok := permMap[permNames[x].(string)]; ok {
 			permIDs = append(permIDs, permID)
 		} else {
 			return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
-
 		}
 	}
 	createBody.Filter.PermissionIDs = &permIDs
@@ -380,6 +396,10 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 		// validate the permission names passed in
 		permSearchBody := new(gosatellite.PermissionsSearch)
 		permSearchBody.ResourceType = &resourceType
+		if resourceType == "" {
+			perPage := 400
+			permSearchBody.PerPage = &perPage
+		}
 		validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
 		if err != nil {
 			return err
@@ -388,14 +408,19 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 		permMap := make(map[string]int)
 		var permIDs []int
 		for _, x := range *validPermissions.Results {
-			permMap[*x.Name] = *x.ID
+			if resourceType == "" {
+				if x.ResourceType == nil {
+					permMap[*x.Name] = *x.ID
+				}
+			} else {
+				permMap[*x.Name] = *x.ID
+			}
 		}
 		for x := range permNames {
 			if permID, ok := permMap[permNames[x].(string)]; ok {
 				permIDs = append(permIDs, permID)
 			} else {
 				return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
-
 			}
 		}
 		updateBody.Filter.PermissionIDs = &permIDs
