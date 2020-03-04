@@ -142,6 +142,31 @@ func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
 	createBody := new(gosatellite.RoleCreate)
 	createBody.Role.Name = &name
 
+	if desc, ok := d.GetOk("description"); ok {
+		description := desc.(string)
+		createBody.Role.Description = &description
+	}
+
+	if loc, ok := d.GetOk("location_ids"); ok {
+		//rawLocationIDs := d.Get("location_ids").(*schema.Set).List()
+		rawLocationIDs := loc.(*schema.Set).List()
+		locationIDs := []int{}
+		for x := range rawLocationIDs {
+			locationIDs = append(locationIDs, rawLocationIDs[x].(int))
+		}
+		createBody.Role.LocationIDs = &locationIDs
+	}
+
+	if org, ok := d.GetOk("organization_ids"); ok {
+		//rawOrganizationIDs := d.Get("organization_ids").(*schema.Set).List()
+		rawOrganizationIDs := org.(*schema.Set).List()
+		organizationIDs := []int{}
+		for x := range rawOrganizationIDs {
+			organizationIDs = append(organizationIDs, rawOrganizationIDs[x].(int))
+		}
+		createBody.Role.OrganizationIDs = &organizationIDs
+	}
+
 	role, _, err := client.Roles.CreateRole(context.Background(), *createBody)
 	if err != nil {
 		return err
