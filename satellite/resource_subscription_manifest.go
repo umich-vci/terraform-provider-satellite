@@ -107,7 +107,7 @@ func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	_, _, err = client.Manifests.UploadManifest(context.Background(), orgID, nil, manifest)
+	_, _, err = client.Manifests.UploadManifest(context.Background(), orgID, nil, manifest, "manifest.zip")
 	if err != nil {
 		return err
 	}
