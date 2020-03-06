@@ -55,6 +55,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"satellite_organization": dataSourceOrganization(),
 			"satellite_permissions":  dataSourcePermissions(),
+			"satellite_products":     dataSourceProducts(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
