@@ -48,6 +48,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"satellite_filter":                resourceFilter(),
+			"satellite_location":              resourceLocation(),
 			"satellite_organization":          resourceOrganization(),
 			"satellite_role":                  resourceRole(),
 			"satellite_subscription_manifest": resourceSubscriptionManifest(),
