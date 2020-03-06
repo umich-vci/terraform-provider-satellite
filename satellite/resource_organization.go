@@ -54,9 +54,11 @@ func resourceOrganizationRead(d *schema.ResourceData, meta interface{}) error {
 
 	org, resp, err := client.Organizations.GetOrganizationByID(context.Background(), orgID)
 	if err != nil {
-		if resp.StatusCode == 404 {
-			d.SetId("")
-			return nil
+		if resp != nil {
+			if resp.StatusCode == 404 {
+				d.SetId("")
+				return nil
+			}
 		}
 		return err
 	}

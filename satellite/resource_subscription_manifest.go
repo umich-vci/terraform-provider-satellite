@@ -69,9 +69,11 @@ func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) 
 
 	hist, resp, err := client.Manifests.GetManifestHistory(context.Background(), orgID)
 	if err != nil {
-		if resp.StatusCode == 404 {
-			d.SetId("")
-			return nil
+		if resp != nil {
+			if resp.StatusCode == 404 {
+				d.SetId("")
+				return nil
+			}
 		}
 		return err
 	}

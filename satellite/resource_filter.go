@@ -130,9 +130,11 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 
 	filter, resp, err := client.Filters.GetFilterByID(context.Background(), filterID)
 	if err != nil {
-		if resp.StatusCode == 404 {
-			d.SetId("")
-			return nil
+		if resp != nil {
+			if resp.StatusCode == 404 {
+				d.SetId("")
+				return nil
+			}
 		}
 		return err
 	}
