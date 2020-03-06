@@ -16,7 +16,9 @@ func resourceFilter() *schema.Resource {
 		Read:   resourceFilterRead,
 		Update: resourceFilterUpdate,
 		Delete: resourceFilterDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"permission_names": &schema.Schema{
 				Type:     schema.TypeSet,

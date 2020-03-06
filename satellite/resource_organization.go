@@ -14,7 +14,9 @@ func resourceOrganization() *schema.Resource {
 		Read:   resourceOrganizationRead,
 		Update: resourceOrganizationUpdate,
 		Delete: resourceOrganizationDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,

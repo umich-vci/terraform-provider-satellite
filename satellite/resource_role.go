@@ -15,7 +15,9 @@ func resourceRole() *schema.Resource {
 		Read:   resourceRoleRead,
 		Update: resourceRoleUpdate,
 		Delete: resourceRoleDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:         schema.TypeString,
