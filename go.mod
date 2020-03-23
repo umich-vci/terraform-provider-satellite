@@ -17,7 +17,7 @@ require (
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/ulikunitz/xz v0.5.6 // indirect
-	github.com/umich-vci/gosatellite v0.0.0-20200306205958-6050415f5c35
+	github.com/umich-vci/gosatellite v0.0.0-20200323201707-410877352cd6
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20200214034016-1d94cc7ab1c6 // indirect
