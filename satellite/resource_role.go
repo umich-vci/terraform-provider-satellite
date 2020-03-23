@@ -63,10 +63,24 @@ func resourceRole() *schema.Resource {
 			"locations": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeMap,
-					Elem: &schema.Schema{
-						Type: schema.TypeString,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"description": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"id": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"title": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -127,11 +141,18 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 	var locationIDs []int
 	var organizationIDs []int
 
-	organizationsList := []map[string]interface{}{}
+	locationsList := []map[string]interface{}{}
 	for _, x := range *role.Locations {
 		locationIDs = append(locationIDs, *x.ID)
+		location := make(map[string]interface{})
+		location["description"] = x.Description
+		location["id"] = x.ID
+		location["name"] = x.Name
+		location["title"] = x.Title
+		locationsList = append(locationsList, location)
 	}
 
+	organizationsList := []map[string]interface{}{}
 	for _, x := range *role.Organizations {
 		organizationIDs = append(organizationIDs, *x.ID)
 		organization := make(map[string]interface{})
@@ -149,7 +170,7 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("builtin", role.Builtin)
 	d.Set("cloned_from_id", role.ClonedFromID)
 	d.Set("filters", role.Filters)
-	d.Set("locations", role.Locations)
+	d.Set("locations", locationsList)
 	d.Set("organizations", organizationsList)
 	d.Set("origin", role.Origin)
 
