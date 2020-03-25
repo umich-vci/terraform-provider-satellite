@@ -320,7 +320,6 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 		} else {
 			return fmt.Errorf("organization_ids cannot be specified for a resource_type of Location")
 		}
-
 	}
 
 	if ovr, ok := d.GetOk("override"); ok {
@@ -377,15 +376,19 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if d.HasChange("organization_ids") {
-		if org, ok := d.GetOk("organization_ids"); ok {
-			rawOrganizationIDs := org.(*schema.Set).List()
-			organizationIDs := []int{}
-			for x := range rawOrganizationIDs {
-				organizationIDs = append(organizationIDs, rawOrganizationIDs[x].(int))
+		if resourceType != "Location" {
+			if org, ok := d.GetOk("organization_ids"); ok {
+				rawOrganizationIDs := org.(*schema.Set).List()
+				organizationIDs := []int{}
+				for x := range rawOrganizationIDs {
+					organizationIDs = append(organizationIDs, rawOrganizationIDs[x].(int))
+				}
+				updateBody.Filter.OrganizationIDs = &organizationIDs
+			} else {
+				updateBody.Filter.OrganizationIDs = new([]int)
 			}
-			updateBody.Filter.OrganizationIDs = &organizationIDs
 		} else {
-			updateBody.Filter.OrganizationIDs = new([]int)
+			return fmt.Errorf("organization_ids cannot be specified for a resource_type of Location")
 		}
 	}
 
