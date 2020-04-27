@@ -47,6 +47,7 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"satellite_activation_key":        resourceActivationKey(),
 			"satellite_filter":                resourceFilter(),
 			"satellite_host_collection":       resourceHostCollection(),
 			"satellite_location":              resourceLocation(),
