@@ -54,10 +54,7 @@ func resourceRole() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
-					Type: schema.TypeMap,
-					Elem: &schema.Schema{
-						Type: schema.TypeString,
-					},
+					Type: schema.TypeInt,
 				},
 			},
 			"locations": &schema.Schema{
@@ -163,13 +160,18 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 		organizationsList = append(organizationsList, organization)
 	}
 
+	filtersList := []int{}
+	for _, x := range *role.Filters {
+		filtersList = append(filtersList, *x.ID)
+	}
+
 	d.Set("name", role.Name)
 	d.Set("description", role.Description)
 	d.Set("location_ids", locationIDs)
 	d.Set("organization_ids", organizationIDs)
 	d.Set("builtin", role.Builtin)
 	d.Set("cloned_from_id", role.ClonedFromID)
-	d.Set("filters", role.Filters)
+	d.Set("filters", filtersList)
 	d.Set("locations", locationsList)
 	d.Set("organizations", organizationsList)
 	d.Set("origin", role.Origin)
