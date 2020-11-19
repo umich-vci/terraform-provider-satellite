@@ -1,11 +1,3 @@
----
-layout: "satellite"
-page_title: "Satellite: satellite_organization"
-sidebar_current: "docs-satellite-datasource-organization"
-description: |-
- Gets information about Red Hat Satellite Organization.
----
-
 # satellite\_organization
 
 Use this data source to access information about a Red Hat Satellite organization.

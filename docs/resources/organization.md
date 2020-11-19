@@ -1,14 +1,6 @@
----
-layout: "satellite"
-page_title: "Satellite: satellite_organization"
-sidebar_current: "docs-satellite-resource-organization"
-description: |-
- Create a Red Hat Satellite Organization.
----
-
 # satellite\_organization
 
-Use this data source to access information about a Red Hat Satellite organization.
+Use this resource to create a Red Hat Satellite organization.
 
 ## Example Usage
 
@@ -36,9 +28,9 @@ resource "satellite_organization" "foo" {
 
 ## Argument Reference
 
-* `name` - (Required) The id of the organiztion to look up.
+* `name` - (Required) The name of the organization.
 
-* `description` - (Optional) The description of the organization.
+* `description` - (Optional) A description of the organization.
 
 * `label` - (Optional) The label of the organization. If not set, Satellite will
   use the `name` as the label.  This field can only be set at creation time. If not

@@ -1,14 +1,6 @@
----
-layout: "satellite"
-page_title: "Provider: Satellite"
-sidebar_current: "docs-satellite-index"
-description: |-
-  The Satellite provider is used to interact with an instance of Red Hat Satellite.
----
-
 # Satellite Provider
 
- The Satellite provider is used to interact with Red Hat Satellite.
+ The Satellite provider is used to interact with Red Hat Satellite 6.x.
 
 ## Example Usage
 
