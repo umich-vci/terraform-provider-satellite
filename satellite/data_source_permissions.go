@@ -2,7 +2,6 @@ package satellite
 
 import (
 	"context"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
@@ -12,11 +11,7 @@ func dataSourcePermissions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourcePermissionsRead,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"resource_type": &schema.Schema{
+			"search": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
@@ -51,29 +46,18 @@ func dataSourcePermissionsRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	searchBody := new(gosatellite.PermissionsSearch)
-	id := "search="
-	idList := []string{}
 
-	if n, ok := d.GetOk("name"); ok {
-		name := n.(string)
-		searchBody.Name = &name
-		idList = append(idList, "name="+name)
+	if n, ok := d.GetOk("search"); ok {
+		search := n.(string)
+		searchBody.Search = &search
 	}
-
-	if r, ok := d.GetOk("resource_type"); ok {
-		resourceType := r.(string)
-		searchBody.ResourceType = &resourceType
-		idList = append(idList, "resource_type="+resourceType)
-	}
-
-	id = id + strings.Join(idList, "&")
 
 	perms, _, err := client.Permissions.ListPermissions(context.Background(), *searchBody)
 	if err != nil {
 		return err
 	}
 
-	d.SetId(id)
+	d.SetId("-")
 
 	permList := make([]map[string]interface{}, 0, len(*perms.Results))
 

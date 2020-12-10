@@ -270,10 +270,16 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 
 	// validate the permission names passed in
 	permSearchBody := new(gosatellite.PermissionsSearch)
-	permSearchBody.ResourceType = &resourceType
+
+	// For the miscellaneous role_type which has a value of null,
+	// I haven't figured out a way to search for resource_type=null
+	// So just get all permissions and then go through them all
 	if resourceType == "" {
 		perPage := 400
 		permSearchBody.PerPage = &perPage
+	} else {
+		search := "resource_type=" + resourceType
+		permSearchBody.Search = &search
 	}
 	validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
 	if err != nil {
@@ -401,12 +407,19 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("permission_names") {
 		// validate the permission names passed in
+
+		// For the miscellaneous role_type which has a value of null,
+		// I haven't figured out a way to search for resource_type=null
+		// So just get all permissions and then go through them all
 		permSearchBody := new(gosatellite.PermissionsSearch)
-		permSearchBody.ResourceType = &resourceType
 		if resourceType == "" {
 			perPage := 400
 			permSearchBody.PerPage = &perPage
+		} else {
+			search := "resource_type=" + resourceType
+			permSearchBody.Search = &search
 		}
+
 		validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
 		if err != nil {
 			return err
