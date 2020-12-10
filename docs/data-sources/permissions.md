@@ -6,15 +6,13 @@ Use this data source to access information about available Red Hat Satellite per
 
 ```hcl
 data "satellite_permissions" "host_collection" {
-    resource_type = "Katello::HostCollection"
+    search = "resource_type=Katello::HostCollection"
 }
 ```
 
 ## Argument Reference
 
-* `name` - (Optional) A permission name to filter the permission search on.
-
-* `resource_type` - (Optional) A resource type to filter the permission search on.
+* `search` - (Optional) A search filter for the permission search. If not specified all permissions are returned.
 
 ## Attributes Reference
 
