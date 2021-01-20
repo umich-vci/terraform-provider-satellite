@@ -55,6 +55,7 @@ func Provider() *schema.Provider {
 			"satellite_subscription_manifest": resourceSubscriptionManifest(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"satellite_location":     dataSourceLocation(),
 			"satellite_organization": dataSourceOrganization(),
 			"satellite_permissions":  dataSourcePermissions(),
 			"satellite_products":     dataSourceProducts(),

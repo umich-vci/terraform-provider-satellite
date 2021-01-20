@@ -1,3 +1,9 @@
+## 0.3.0 (not yet released)
+
+FEATURES:
+
+* **New Data Source:** `satellite_location`
+
 ## 0.2.0 (December 10, 2020)
 
 BREAKING CHANGES:
