@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/yamux v0.0.0-20190923154419-df201c70410d // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/oklog/run v1.1.0 // indirect
-	github.com/umich-vci/gosatellite v0.0.0-20201210181146-c8a049d1e6ab
+	github.com/umich-vci/gosatellite v0.0.0-20210128210153-44a532efac88
 	github.com/zclconf/go-cty v1.3.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

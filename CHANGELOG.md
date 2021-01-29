@@ -3,6 +3,7 @@
 FEATURES:
 
 * **New Data Source:** `satellite_location`
+* **New Resource:** `satellite_user_group`
 
 ## 0.2.0 (December 10, 2020)
 

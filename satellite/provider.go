@@ -53,6 +53,7 @@ func Provider() *schema.Provider {
 			"satellite_organization":          resourceOrganization(),
 			"satellite_role":                  resourceRole(),
 			"satellite_subscription_manifest": resourceSubscriptionManifest(),
+			"satellite_user_group":            resourceUserGroup(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"satellite_location":     dataSourceLocation(),
