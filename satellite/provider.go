@@ -47,6 +47,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"satellite_activation_key":        resourceActivationKey(),
+			"satellite_external_user_group":   resourceExternalUserGroup(),
 			"satellite_filter":                resourceFilter(),
 			"satellite_host_collection":       resourceHostCollection(),
 			"satellite_location":              resourceLocation(),
