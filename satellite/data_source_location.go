@@ -14,17 +14,37 @@ func dataSourceLocation() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceLocationRead,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"search": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"description": &schema.Schema{
+			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"parent_id": &schema.Schema{
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"parent_id": {
 				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"parent_name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"title": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"updated_at": {
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -37,8 +57,7 @@ func dataSourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	name := d.Get("name").(string)
-	searchString := fmt.Sprintf("name=\"%s\"", name)
+	searchString := d.Get("search").(string)
 
 	locSearch := new(gosatellite.LocationsListOptions)
 	locSearch.Search = searchString
@@ -59,8 +78,13 @@ func dataSourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.SetId(strconv.Itoa(*locationList[0].ID))
+	d.Set("created_at", *locationList[0].CreatedAt)
 	d.Set("description", *locationList[0].Description)
+	d.Set("name", *locationList[0].Name)
 	d.Set("parent_id", *locationList[0].ParentID)
+	d.Set("parent_name", *locationList[0].ParentName)
+	d.Set("title", *locationList[0].Title)
+	d.Set("updated_at", *locationList[0].UpdatedAt)
 
 	return nil
 }

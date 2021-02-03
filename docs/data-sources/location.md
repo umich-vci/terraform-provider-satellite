@@ -6,13 +6,26 @@ Use this data source to access information about a Red Hat Satellite location.
 
 ```hcl
 resource "satellite_location" "Tatooine" {
-    name = "Tatooine"
+    search = "name=Tatooine"
 }
 ```
 
+## Argument Reference
+
+* `search` - (Required) A search filter for the Location search. The search must only return 1 Location=.
+
 ## Attributes Reference
+
+* `created_at` - Timestamp of when the location was created.
 
 * `description` - A description of the location.
 
-* `parent_id` - The ID of a parent for this location. This allows you to nest locations.
-  If not set, the resource is a top level location.
+* `name` - The name of the location.
+
+* `parent_id` - The ID of the parent for this location.  If not set, the location is a top level location.
+
+* `parent_name` - The name of the parent for this location.  If not set, the location is a top level location.
+
+* `title` - The title of the location.
+
+* `updated_at` - Timestamp of when the location was last updated

@@ -1,5 +1,9 @@
 ## 0.3.0 (not yet released)
 
+BREAKING CHANGES:
+
+* datasource/satellite_location: `name` changed to computed value and `search` added as an argument.
+
 FEATURES:
 
 * **New Data Source:** `satellite_auth_source_ldap`
