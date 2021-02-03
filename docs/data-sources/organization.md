@@ -6,26 +6,28 @@ Use this data source to access information about a Red Hat Satellite organizatio
 
 ```hcl
 data "satellite_organization" "default" {
-    id = 1
+    search = "name=default"
 }
 
-output "default_org_name" {
-    value = data.satellite_organization.default.name
+output "default_org_id" {
+    value = data.satellite_organization.default.id
 }
 ```
 
 ## Argument Reference
 
-* `id` - (Required) The id of the organiztion to look up.
+* `search` - (Required) A search filter for the Location search. The search must only return 1 Organization.
 
 ## Attributes Reference
 
-* `description` - The description of the organization.
+* `created_at` - Timestamp of when the organization was created.
 
-* `hosts_count` - A count of how many hosts are registered to the organization.
+* `description` - The description of the organization.
 
 * `label` - The label of the organization.
 
 * `name` - The name of the organization.
 
 * `title` - The title of the organization.
+
+* `updated_at` - Timestamp of when the organization was last updated

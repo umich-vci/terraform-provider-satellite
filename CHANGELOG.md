@@ -3,6 +3,7 @@
 BREAKING CHANGES:
 
 * datasource/satellite_location: `name` changed to computed value and `search` added as an argument.
+* datasource/satellite_organization: `id` changed to computed value and `search` added as an argument.
 
 FEATURES:
 
