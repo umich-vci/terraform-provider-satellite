@@ -18,38 +18,38 @@ func resourceActivationKey() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"content_view_id": &schema.Schema{
+			"content_view_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"environment_id": &schema.Schema{
+			"environment_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"organization_id": &schema.Schema{
+			"organization_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"host_collection_ids": &schema.Schema{
+			"host_collection_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"max_hosts": &schema.Schema{
+			"max_hosts": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"unlimited_hosts": &schema.Schema{
+			"unlimited_hosts": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,

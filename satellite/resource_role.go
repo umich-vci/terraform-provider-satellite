@@ -19,45 +19,45 @@ func resourceRole() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"location_ids": &schema.Schema{
+			"location_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"organization_ids": &schema.Schema{
+			"organization_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"builtin": &schema.Schema{
+			"builtin": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"cloned_from_id": &schema.Schema{
+			"cloned_from_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"filters": &schema.Schema{
+			"filters": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"locations": &schema.Schema{
+			"locations": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -81,7 +81,7 @@ func resourceRole() *schema.Resource {
 					},
 				},
 			},
-			"organizations": &schema.Schema{
+			"organizations": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -105,7 +105,7 @@ func resourceRole() *schema.Resource {
 					},
 				},
 			},
-			"origin": &schema.Schema{
+			"origin": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

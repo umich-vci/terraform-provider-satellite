@@ -18,17 +18,17 @@ func resourceSubscriptionManifest() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"organization_id": &schema.Schema{
+			"organization_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
-			"manifest": &schema.Schema{
+			"manifest": {
 				Type:      schema.TypeString,
 				Required:  true,
 				Sensitive: true,
 			},
-			"history": &schema.Schema{
+			"history": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{

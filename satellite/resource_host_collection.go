@@ -18,33 +18,33 @@ func resourceHostCollection() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"organization_id": &schema.Schema{
+			"organization_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"max_hosts": &schema.Schema{
+			"max_hosts": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"unlimited_hosts": &schema.Schema{
+			"unlimited_hosts": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,
 			},
-			"created_at": &schema.Schema{
+			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"updated_at": &schema.Schema{
+			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

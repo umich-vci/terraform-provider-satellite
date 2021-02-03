@@ -20,50 +20,50 @@ func resourceFilter() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"permission_names": &schema.Schema{
+			"permission_names": {
 				Type:     schema.TypeSet,
 				Required: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
-			"role_id": &schema.Schema{
+			"role_id": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"resource_type": &schema.Schema{
+			"resource_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice(resourceTypeList, false),
 			},
-			"location_ids": &schema.Schema{
+			"location_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"organization_ids": &schema.Schema{
+			"organization_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"override": &schema.Schema{
+			"override": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"search": &schema.Schema{
+			"search": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"created_at": &schema.Schema{
+			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"locations": &schema.Schema{
+			"locations": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
@@ -73,7 +73,7 @@ func resourceFilter() *schema.Resource {
 					},
 				},
 			},
-			"organizations": &schema.Schema{
+			"organizations": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
@@ -83,7 +83,7 @@ func resourceFilter() *schema.Resource {
 					},
 				},
 			},
-			"permissions": &schema.Schema{
+			"permissions": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
@@ -93,25 +93,25 @@ func resourceFilter() *schema.Resource {
 					},
 				},
 			},
-			"permission_ids": &schema.Schema{
+			"permission_ids": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
-			"role": &schema.Schema{
+			"role": {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
-			"unlimited": &schema.Schema{
+			"unlimited": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"updated_at": &schema.Schema{
+			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -277,7 +277,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	if resourceType == "" {
 		permSearchOpts.PerPage = 400
 	} else {
-		permSearchOpts.Search = fmt.Sprint("resource_type=%s", resourceType)
+		permSearchOpts.Search = fmt.Sprintf("resource_type=%s", resourceType)
 	}
 	validPermissions, _, err := client.Permissions.List(context.Background(), *permSearchOpts)
 	if err != nil {

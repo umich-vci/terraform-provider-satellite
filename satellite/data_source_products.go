@@ -11,19 +11,19 @@ func dataSourceProducts() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceProductsRead,
 		Schema: map[string]*schema.Schema{
-			"organization_id": &schema.Schema{
+			"organization_id": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"red_hat_only": &schema.Schema{
+			"red_hat_only": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"product_name": &schema.Schema{
+			"product_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"products": &schema.Schema{
+			"products": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{

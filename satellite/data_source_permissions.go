@@ -11,11 +11,11 @@ func dataSourcePermissions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourcePermissionsRead,
 		Schema: map[string]*schema.Schema{
-			"search": &schema.Schema{
+			"search": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"permissions": &schema.Schema{
+			"permissions": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
