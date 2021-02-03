@@ -57,10 +57,11 @@ func Provider() *schema.Provider {
 			"satellite_user_group":            resourceUserGroup(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"satellite_location":     dataSourceLocation(),
-			"satellite_organization": dataSourceOrganization(),
-			"satellite_permissions":  dataSourcePermissions(),
-			"satellite_products":     dataSourceProducts(),
+			"satellite_auth_source_ldap": dataSourceAuthSourceLDAP(),
+			"satellite_location":         dataSourceLocation(),
+			"satellite_organization":     dataSourceOrganization(),
+			"satellite_permissions":      dataSourcePermissions(),
+			"satellite_products":         dataSourceProducts(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

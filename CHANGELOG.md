@@ -2,6 +2,7 @@
 
 FEATURES:
 
+* **New Data Source:** `satellite_auth_source_ldap`
 * **New Data Source:** `satellite_location`
 * **New Resource:** `satellite_external_user_group`
 * **New Resource:** `satellite_user_group`
