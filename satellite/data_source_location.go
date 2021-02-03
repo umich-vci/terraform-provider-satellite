@@ -40,11 +40,10 @@ func dataSourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 	name := d.Get("name").(string)
 	searchString := fmt.Sprintf("name=\"%s\"", name)
 
-	locSearch := gosatellite.LocationsSearch{
-		Search: &searchString,
-	}
+	locSearch := new(gosatellite.LocationsListOptions)
+	locSearch.Search = searchString
 
-	location, _, err := client.Locations.ListLocations(context.Background(), locSearch)
+	location, _, err := client.Locations.List(context.Background(), locSearch)
 	if err != nil {
 		return err
 	}

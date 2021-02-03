@@ -63,7 +63,7 @@ func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error 
 		return err
 	}
 
-	hc, resp, err := client.HostCollections.GetHostCollectionByID(context.Background(), hcID)
+	hc, resp, err := client.HostCollections.Get(context.Background(), hcID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -108,7 +108,7 @@ func resourceHostCollectionCreate(d *schema.ResourceData, meta interface{}) erro
 		createBody.MaxHosts = &maxHosts
 	}
 
-	hc, _, err := client.HostCollections.CreateHostCollection(context.Background(), orgID, *createBody)
+	hc, _, err := client.HostCollections.Create(context.Background(), orgID, *createBody)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func resourceHostCollectionUpdate(d *schema.ResourceData, meta interface{}) erro
 		updateBody.UnlimitedHosts = &unlimited
 	}
 
-	_, _, err = client.HostCollections.UpdateHostCollection(context.Background(), hcID, *updateBody)
+	_, _, err = client.HostCollections.Update(context.Background(), hcID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func resourceHostCollectionDelete(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	_, err = client.HostCollections.DeleteHostCollection(context.Background(), hcID)
+	_, err = client.HostCollections.Delete(context.Background(), hcID)
 	if err != nil {
 		return err
 	}

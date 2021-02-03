@@ -96,7 +96,7 @@ func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	ug, resp, err := client.UserGroups.GetUserGroupByID(context.Background(), ugID)
+	ug, resp, err := client.UserGroups.Get(context.Background(), ugID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -138,7 +138,7 @@ func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	name := d.Get("name").(string)
 
 	createBody := new(gosatellite.UserGroupCreate)
-	createBody.UserGroup.Name = name
+	createBody.UserGroup.Name = &name
 
 	if adm, ok := d.GetOk("admin"); ok {
 		admin := adm.(bool)
@@ -154,7 +154,7 @@ func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
 		createBody.UserGroup.RoleIDs = &roleIDs
 	}
 
-	ug, _, err := client.UserGroups.CreateUserGroup(context.Background(), *createBody)
+	ug, _, err := client.UserGroups.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -194,7 +194,7 @@ func resourceUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateBody.UserGroup.RoleIDs = &roleIDs
 	}
 
-	_, _, err = client.UserGroups.UpdateUserGroup(context.Background(), ugID, *updateBody)
+	_, _, err = client.UserGroups.Update(context.Background(), ugID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -212,7 +212,7 @@ func resourceUserGroupDelete(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	_, _, err = client.UserGroups.DeleteUserGroup(context.Background(), ugID)
+	_, _, err = client.UserGroups.Delete(context.Background(), ugID)
 	if err != nil {
 		return err
 	}

@@ -70,7 +70,7 @@ func resourceExternalUserGroupRead(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	eug, resp, err := client.UserGroups.GetExternalUserGroupByID(context.Background(), ugID, eugID)
+	eug, resp, err := client.ExternalUserGroups.Get(context.Background(), ugID, eugID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -104,10 +104,10 @@ func resourceExternalUserGroupCreate(d *schema.ResourceData, meta interface{}) e
 	asID := d.Get("auth_source_id").(int)
 
 	createBody := new(gosatellite.ExternalUserGroupCreate)
-	createBody.ExternalUserGroup.AuthSourceID = asID
-	createBody.ExternalUserGroup.Name = name
+	createBody.ExternalUserGroup.AuthSourceID = &asID
+	createBody.ExternalUserGroup.Name = &name
 
-	eug, _, err := client.UserGroups.CreateExternalUserGroup(context.Background(), ugID, *createBody)
+	eug, _, err := client.ExternalUserGroups.Create(context.Background(), ugID, *createBody)
 	if err != nil {
 		return err
 	}
@@ -140,7 +140,7 @@ func resourceExternalUserGroupUpdate(d *schema.ResourceData, meta interface{}) e
 		updateBody.ExternalUserGroup.AuthSourceID = &asID
 	}
 
-	_, _, err = client.UserGroups.UpdateExternalUserGroup(context.Background(), ugID, eugID, *updateBody)
+	_, _, err = client.ExternalUserGroups.Update(context.Background(), ugID, eugID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func resourceExternalUserGroupDelete(d *schema.ResourceData, meta interface{}) e
 
 	ugID := d.Get("user_group_id").(int)
 
-	_, _, err = client.UserGroups.DeleteExternalUserGroup(context.Background(), ugID, eugID)
+	_, _, err = client.ExternalUserGroups.Delete(context.Background(), ugID, eugID)
 	if err != nil {
 		return err
 	}

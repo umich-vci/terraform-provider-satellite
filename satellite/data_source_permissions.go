@@ -45,14 +45,13 @@ func dataSourcePermissionsRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	searchBody := new(gosatellite.PermissionsSearch)
+	searchOpt := new(gosatellite.PermissionsListOptions)
 
 	if n, ok := d.GetOk("search"); ok {
-		search := n.(string)
-		searchBody.Search = &search
+		searchOpt.Search = n.(string)
 	}
 
-	perms, _, err := client.Permissions.ListPermissions(context.Background(), *searchBody)
+	perms, _, err := client.Permissions.List(context.Background(), *searchOpt)
 	if err != nil {
 		return err
 	}

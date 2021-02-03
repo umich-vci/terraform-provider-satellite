@@ -124,7 +124,7 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	role, resp, err := client.Roles.GetRoleByID(context.Background(), roleID)
+	role, resp, err := client.Roles.Get(context.Background(), roleID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -215,7 +215,7 @@ func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
 		createBody.Role.OrganizationIDs = &organizationIDs
 	}
 
-	role, _, err := client.Roles.CreateRole(context.Background(), *createBody)
+	role, _, err := client.Roles.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -262,7 +262,7 @@ func resourceRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateBody.Role.OrganizationIDs = &organizationIDs
 	}
 
-	_, _, err = client.Roles.UpdateRole(context.Background(), roleID, *updateBody)
+	_, _, err = client.Roles.Update(context.Background(), roleID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -281,7 +281,7 @@ func resourceRoleDelete(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	_, err = client.Roles.DeleteRole(context.Background(), roleID)
+	_, err = client.Roles.Delete(context.Background(), roleID)
 	if err != nil {
 		return err
 	}

@@ -48,7 +48,7 @@ func dataSourceOrganizationRead(d *schema.ResourceData, meta interface{}) error 
 
 	orgID := d.Get("id").(int)
 
-	org, _, err := client.Organizations.GetOrganizationByID(context.Background(), orgID)
+	org, _, err := client.Organizations.Get(context.Background(), orgID)
 	if err != nil {
 		return err
 	}

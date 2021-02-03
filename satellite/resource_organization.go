@@ -54,7 +54,7 @@ func resourceOrganizationRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	org, resp, err := client.Organizations.GetOrganizationByID(context.Background(), orgID)
+	org, resp, err := client.Organizations.Get(context.Background(), orgID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -83,7 +83,7 @@ func resourceOrganizationCreate(d *schema.ResourceData, meta interface{}) error 
 	createBody := new(gosatellite.OrganizationCreate)
 	createBody.Organization.Name = d.Get("name").(string)
 
-	org, _, err := client.Organizations.CreateOrganization(context.Background(), *createBody)
+	org, _, err := client.Organizations.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -114,7 +114,7 @@ func resourceOrganizationUpdate(d *schema.ResourceData, meta interface{}) error 
 		updateBody.Organization.Name = &name
 	}
 
-	_, _, err = client.Organizations.UpdateOrganization(context.Background(), orgID, *updateBody)
+	_, _, err = client.Organizations.Update(context.Background(), orgID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func resourceOrganizationDelete(d *schema.ResourceData, meta interface{}) error 
 		return err
 	}
 
-	_, err = client.Organizations.DeleteOrganization(context.Background(), orgID)
+	_, err = client.Organizations.Delete(context.Background(), orgID)
 	if err != nil {
 		return err
 	}

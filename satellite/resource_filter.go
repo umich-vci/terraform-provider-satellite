@@ -130,7 +130,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	filter, resp, err := client.Filters.GetFilterByID(context.Background(), filterID)
+	filter, resp, err := client.Filters.Get(context.Background(), filterID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -269,19 +269,17 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	createBody.Filter.RoleID = &roleID
 
 	// validate the permission names passed in
-	permSearchBody := new(gosatellite.PermissionsSearch)
+	permSearchOpts := new(gosatellite.PermissionsListOptions)
 
 	// For the miscellaneous role_type which has a value of null,
 	// I haven't figured out a way to search for resource_type=null
 	// So just get all permissions and then go through them all
 	if resourceType == "" {
-		perPage := 400
-		permSearchBody.PerPage = &perPage
+		permSearchOpts.PerPage = 400
 	} else {
-		search := "resource_type=" + resourceType
-		permSearchBody.Search = &search
+		permSearchOpts.Search = fmt.Sprint("resource_type=%s", resourceType)
 	}
-	validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
+	validPermissions, _, err := client.Permissions.List(context.Background(), *permSearchOpts)
 	if err != nil {
 		return err
 	}
@@ -338,7 +336,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 		createBody.Filter.Search = &search
 	}
 
-	filter, _, err := client.Filters.CreateFilter(context.Background(), *createBody)
+	filter, _, err := client.Filters.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -411,16 +409,14 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 		// For the miscellaneous role_type which has a value of null,
 		// I haven't figured out a way to search for resource_type=null
 		// So just get all permissions and then go through them all
-		permSearchBody := new(gosatellite.PermissionsSearch)
+		permSearchOpts := new(gosatellite.PermissionsListOptions)
 		if resourceType == "" {
-			perPage := 400
-			permSearchBody.PerPage = &perPage
+			permSearchOpts.PerPage = 400
 		} else {
-			search := "resource_type=" + resourceType
-			permSearchBody.Search = &search
+			permSearchOpts.Search = fmt.Sprintf("resource_type=%s", resourceType)
 		}
 
-		validPermissions, _, err := client.Permissions.ListPermissions(context.Background(), *permSearchBody)
+		validPermissions, _, err := client.Permissions.List(context.Background(), *permSearchOpts)
 		if err != nil {
 			return err
 		}
@@ -453,7 +449,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	_, _, err = client.Filters.UpdateFilter(context.Background(), filterID, *updateBody)
+	_, _, err = client.Filters.Update(context.Background(), filterID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -472,7 +468,7 @@ func resourceFilterDelete(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	_, err = client.Filters.DeleteFilter(context.Background(), filterID)
+	_, err = client.Filters.Delete(context.Background(), filterID)
 	if err != nil {
 		return err
 	}

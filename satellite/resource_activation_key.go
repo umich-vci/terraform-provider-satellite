@@ -69,7 +69,7 @@ func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	activationKey, resp, err := client.ActivationKeys.GetActivationKeyByID(context.Background(), akID)
+	activationKey, resp, err := client.ActivationKeys.Get(context.Background(), akID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -113,7 +113,7 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 	createBody.Name = &name
 	createBody.UnlimitedHosts = &unlimited
 
-	activationKey, _, err := client.ActivationKeys.CreateActivationKey(context.Background(), *createBody)
+	activationKey, _, err := client.ActivationKeys.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 		for x := range rawHCIDs {
 			hcIDs = append(hcIDs, rawHCIDs[x].(int))
 		}
-		_, _, err := client.ActivationKeys.AssociateHostCollectionsWithActivationKey(context.Background(), *activationKey.ID, hcIDs)
+		_, _, err := client.ActivationKeys.AssociateHostCollections(context.Background(), *activationKey.ID, hcIDs)
 		if err != nil {
 			return err
 		}
@@ -186,7 +186,7 @@ func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	if update {
-		_, _, err = client.ActivationKeys.UpdateActivationKey(context.Background(), akID, *updateBody)
+		_, _, err = client.ActivationKeys.Update(context.Background(), akID, *updateBody)
 		if err != nil {
 			return err
 		}
@@ -224,14 +224,14 @@ func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error
 		}
 
 		if len(hcAddList) > 0 {
-			_, _, err := client.ActivationKeys.AssociateHostCollectionsWithActivationKey(context.Background(), akID, hcAddList)
+			_, _, err := client.ActivationKeys.AssociateHostCollections(context.Background(), akID, hcAddList)
 			if err != nil {
 				return err
 			}
 		}
 
 		if len(hcRemoveList) > 0 {
-			_, _, err := client.ActivationKeys.DisassociateHostCollectionsWithActivationKey(context.Background(), akID, hcRemoveList)
+			_, _, err := client.ActivationKeys.DisassociateHostCollections(context.Background(), akID, hcRemoveList)
 			if err != nil {
 				return err
 			}
@@ -253,7 +253,7 @@ func resourceActivationKeyDelete(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	_, err = client.ActivationKeys.DeleteActivationKey(context.Background(), akID)
+	_, err = client.ActivationKeys.Delete(context.Background(), akID)
 	if err != nil {
 		return err
 	}

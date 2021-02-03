@@ -47,7 +47,7 @@ func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	location, resp, err := client.Locations.GetLocationByID(context.Background(), locationID)
+	location, resp, err := client.Locations.Get(context.Background(), locationID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -84,7 +84,7 @@ func resourceLocationCreate(d *schema.ResourceData, meta interface{}) error {
 		createBody.Location.ParentID = &parentID
 	}
 
-	location, _, err := client.Locations.CreateLocation(context.Background(), *createBody)
+	location, _, err := client.Locations.Create(context.Background(), *createBody)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func resourceLocationUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateBody.Location.ParentID = &parentID
 	}
 
-	_, _, err = client.Locations.UpdateLocation(context.Background(), locationID, *updateBody)
+	_, _, err = client.Locations.Update(context.Background(), locationID, *updateBody)
 	if err != nil {
 		return err
 	}
@@ -138,7 +138,7 @@ func resourceLocationDelete(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	_, err = client.Locations.DeleteLocation(context.Background(), locationID)
+	_, err = client.Locations.Delete(context.Background(), locationID)
 	if err != nil {
 		return err
 	}

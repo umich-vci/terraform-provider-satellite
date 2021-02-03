@@ -67,7 +67,7 @@ func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	hist, resp, err := client.Manifests.GetManifestHistory(context.Background(), orgID)
+	hist, resp, err := client.Manifests.GetHistory(context.Background(), orgID)
 	if err != nil {
 		if resp != nil {
 			if resp.StatusCode == 404 {
@@ -109,7 +109,7 @@ func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	_, _, err = client.Manifests.UploadManifest(context.Background(), orgID, nil, manifest, "manifest.zip")
+	_, _, err = client.Manifests.Upload(context.Background(), orgID, nil, manifest, "manifest.zip")
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func resourceSubscriptionManifestUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	_, err = client.Manifests.RefreshManifest(context.Background(), orgID)
+	_, err = client.Manifests.Refresh(context.Background(), orgID)
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func resourceSubscriptionManifestDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	_, err = client.Manifests.DeleteManifest(context.Background(), orgID)
+	_, err = client.Manifests.Delete(context.Background(), orgID)
 	if err != nil {
 		return err
 	}

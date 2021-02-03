@@ -81,24 +81,21 @@ func dataSourceProductsRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	pSearch := new(gosatellite.ProductSearch)
+	pOptions := new(gosatellite.ProductsListOptions)
 
 	if oID, ok := d.GetOk("organization_id"); ok {
-		orgID := oID.(int)
-		pSearch.OrganizationID = &orgID
+		pOptions.OrganizationID = oID.(int)
 	}
 
 	if rhOnly, ok := d.GetOk("red_hat_only"); ok {
-		redHatOnly := rhOnly.(bool)
-		pSearch.RedHatOnly = &redHatOnly
+		pOptions.RedHatOnly = rhOnly.(bool)
 	}
 
 	if pName, ok := d.GetOk("product_name"); ok {
-		productName := pName.(string)
-		pSearch.Name = &productName
+		pOptions.Name = pName.(string)
 	}
 
-	products, _, err := client.Products.ListProducts(context.Background(), *pSearch)
+	products, _, err := client.Products.List(context.Background(), pOptions)
 	if err != nil {
 		return err
 	}
