@@ -12,16 +12,16 @@ resource "satellite_activation_key" "key" {
 
 ## Argument Reference
 
-* `content_view_id` - (Required) The ID of the content view to associate with the activation key.
-
-* `environment_id` - (Required) The ID of the environment that contains the `content_view_id`.
-
 * `name` - (Required) The name of the activation key.  This is the value of the key that clients
   use to activate.
 
 * `organization_id` - (Required) The ID of the organization to associate with the activation key.
 
-* `description` - (Required) A description of the activation key.
+* `content_view_id` - (Optional) The ID of the content view to associate with the activation key.
+
+* `description` - (Optional) A description of the activation key.
+
+* `environment_id` - (Optional) The ID of the environment that contains the `content_view_id`.
 
 * `host_collection_ids` - (Optional) A list of host collection IDs to associate with the activation key.
   Machines activated with the key will be added to these host collections.

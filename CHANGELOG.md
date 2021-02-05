@@ -1,3 +1,9 @@
+## 0.3.1 (February 5, 2021)
+
+BUG FIXES:
+
+* resource/satellite_activation_key: Fixed setting optional values at creation time.
+
 ## 0.3.0 (February 4, 2021)
 
 BREAKING CHANGES:

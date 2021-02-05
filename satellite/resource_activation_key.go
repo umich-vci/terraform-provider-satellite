@@ -18,14 +18,6 @@ func resourceActivationKey() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"content_view_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
-			"environment_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -34,9 +26,17 @@ func resourceActivationKey() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
+			"content_view_id": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
 			"description": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+			},
+			"environment_id": {
+				Type:     schema.TypeInt,
+				Optional: true,
 			},
 			"host_collection_ids": {
 				Type:     schema.TypeSet,
@@ -112,6 +112,26 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 	createBody.OrganizationID = &orgID
 	createBody.Name = &name
 	createBody.UnlimitedHosts = &unlimited
+
+	if c, ok := d.GetOk("content_view_id"); ok {
+		cvID := c.(int)
+		createBody.ContentViewID = &cvID
+	}
+
+	if d, ok := d.GetOk("description"); ok {
+		desc := d.(string)
+		createBody.Description = &desc
+	}
+
+	if e, ok := d.GetOk("environment_id"); ok {
+		eID := e.(int)
+		createBody.EnvironmentID = &eID
+	}
+
+	if m, ok := d.GetOk("max_hosts"); ok {
+		max := m.(int)
+		createBody.MaxHosts = &max
+	}
 
 	activationKey, _, err := client.ActivationKeys.Create(context.Background(), *createBody)
 	if err != nil {
