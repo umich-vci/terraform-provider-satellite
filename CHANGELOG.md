@@ -1,3 +1,9 @@
+## 0.3.2 (February 18, 2021)
+
+BUG FIXES:
+
+* resource/satellite_external_user_group: Fixed `auth_source_ldap` computed value not being set properly.
+
 ## 0.3.1 (February 5, 2021)
 
 BUG FIXES:
