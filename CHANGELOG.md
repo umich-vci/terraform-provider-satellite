@@ -10,6 +10,8 @@ ENHANCEMENTS:
 * Added descriptions to resources and data sources to allow for usage in documentation
   generation and in the language server.
 
+* **New Data Source:** `satellite_content_view`
+
 ## 0.3.3 (June 3, 2021)
 
 IMPROVEMENTS:
