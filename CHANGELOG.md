@@ -1,3 +1,9 @@
+## 0.4.0 (Not yet released)
+
+FEATURES:
+
+* **New Data Source:** `satellite_content_view`
+
 ## 0.3.2 (February 18, 2021)
 
 BUG FIXES:
