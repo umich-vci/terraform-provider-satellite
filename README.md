@@ -21,7 +21,7 @@ That said, running `GO111MODULE=on go get -u github.com/umich-vci/terraform-prov
 the code and result in a binary at `$GOPATH/bin/terraform-provider-satellite`. You can then move the
 binary to `~/.terraform.d/plugins` to use it with Terraform.
 
-This has been tested with Terraform 0.12.x and Satellite 6.6.x and 6.7.x.
+This has been tested with Terraform 0.12.x and Satellite 6.6.x, 6.7.x, 6.8.x, and 6.9.x.
 
 ## License
 
