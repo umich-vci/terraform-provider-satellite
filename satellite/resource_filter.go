@@ -507,6 +507,7 @@ var resourceTypeList = []string{
 	"HostClass",
 	"Hostgroup",
 	"HttpProxy",
+	"InsightsHit",
 	"Image",
 	"JobInvocation",
 	"JobTemplate",

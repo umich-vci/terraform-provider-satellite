@@ -1,3 +1,9 @@
+## 0.3.3 (June 3, 2021)
+
+IMPROVEMENTS:
+
+* resource/satellite_filter: Support `InsightsHit` filter type added in Satellite 6.9.
+
 ## 0.3.2 (February 18, 2021)
 
 BUG FIXES:

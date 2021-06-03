@@ -27,14 +27,14 @@ resource "satellite_filter" "miscellaneous" {
 * `role_id` - (Required) The ID of the role that the filter should be created under.
 
 * `resource_type` - (Required) The resource type of the filter.  Once this is set, it cannot be
-  changed without recreating the filter.  As of Satellite 6.7, valid resource types are:
+  changed without recreating the filter.  As of Satellite 6.9, valid resource types are:
   `""` (empty string - this corresponds with "Miscellaneous" in the GUI), `AnsibleRole`,
   `AnsibleVariable`, `Architecture`, `Audit`, `AuthSource`, `Bookmark`, `ComputeProfile`,
   `ComputeResource`, `ConfigGroup`, `ConfigReport`, `DiscoveryRule`, `Domain`, `Environment`,
   `ExternalUsergroup`, `FactValue`, `Filter`, `ForemanOpenscap::ArfReport`,
   `ForemanOpenscap::Policy`, `ForemanOpenscap::ScapContent`, `ForemanOpenscap::TailoringFile`,
   `ForemanTasks::RecurringLogic`, `ForemanTasks::Task`, `ForemanVirtWhoConfigure::Config`, `Host`,
-  `HostClass`, `Hostgroup`, `HttpProxy`, `Image`, `JobInvocation`, `JobTemplate`,
+  `HostClass`, `Hostgroup`, `HttpProxy`, `Image`, `InsightsHit`, `JobInvocation`, `JobTemplate`,
   `Katello::ActivationKey`, `Katello::ContentView`, `Katello::GpgKey`, `Katello::HostCollection`,
   `Katello::KTEnvironment`, `Katello::Product`, `Katello::Subscription`, `Katello::SyncPlan`,
   `KeyPair`, `Location`, `MailNotification`, `Medium`, `Model`, `Operatingsystem`, `Organization`,
