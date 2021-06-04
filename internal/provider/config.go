@@ -1,4 +1,4 @@
-package satellite
+package provider
 
 import (
 	"github.com/umich-vci/gosatellite"
