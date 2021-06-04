@@ -53,10 +53,7 @@ func resourceHostCollection() *schema.Resource {
 }
 
 func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -86,10 +83,7 @@ func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceHostCollectionCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
 	unlimited := d.Get("unlimited_hosts").(bool)
@@ -119,10 +113,7 @@ func resourceHostCollectionCreate(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceHostCollectionUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -160,10 +151,7 @@ func resourceHostCollectionUpdate(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceHostCollectionDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {

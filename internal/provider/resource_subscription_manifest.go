@@ -57,10 +57,7 @@ func resourceSubscriptionManifest() *schema.Resource {
 }
 
 func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -96,10 +93,7 @@ func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
 
@@ -120,10 +114,7 @@ func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceSubscriptionManifestUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -139,10 +130,7 @@ func resourceSubscriptionManifestUpdate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceSubscriptionManifestDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {

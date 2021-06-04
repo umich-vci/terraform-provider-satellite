@@ -76,10 +76,7 @@ func dataSourceProducts() *schema.Resource {
 }
 
 func dataSourceProductsRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	pOptions := new(gosatellite.ProductsListOptions)
 

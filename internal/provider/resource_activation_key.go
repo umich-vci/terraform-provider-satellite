@@ -59,10 +59,7 @@ func resourceActivationKey() *schema.Resource {
 }
 
 func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -99,10 +96,7 @@ func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
 	name := d.Get("name").(string)
@@ -156,10 +150,7 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -263,10 +254,7 @@ func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceActivationKeyDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
