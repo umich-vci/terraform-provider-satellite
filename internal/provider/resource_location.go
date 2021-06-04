@@ -37,10 +37,7 @@ func resourceLocation() *schema.Resource {
 }
 
 func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -66,10 +63,8 @@ func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceLocationCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
+
 	name := d.Get("name").(string)
 	createBody := new(gosatellite.LocationCreate)
 	createBody.Location.Name = &name
@@ -95,10 +90,7 @@ func resourceLocationCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceLocationUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -128,10 +120,7 @@ func resourceLocationUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceLocationDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {

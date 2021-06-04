@@ -114,10 +114,7 @@ func resourceRole() *schema.Resource {
 }
 
 func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -180,10 +177,7 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
 
@@ -226,10 +220,7 @@ func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceRoleUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -271,10 +262,7 @@ func resourceRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceRoleDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {

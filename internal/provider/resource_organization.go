@@ -44,10 +44,7 @@ func resourceOrganization() *schema.Resource {
 }
 
 func resourceOrganizationRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -75,10 +72,7 @@ func resourceOrganizationRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceOrganizationCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	createBody := new(gosatellite.OrganizationCreate)
 	createBody.Organization.Name = d.Get("name").(string)
@@ -94,10 +88,7 @@ func resourceOrganizationCreate(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceOrganizationUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -123,10 +114,7 @@ func resourceOrganizationUpdate(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceOrganizationDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {

@@ -40,10 +40,7 @@ func dataSourcePermissions() *schema.Resource {
 }
 
 func dataSourcePermissionsRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	searchOpt := new(gosatellite.PermissionsListOptions)
 

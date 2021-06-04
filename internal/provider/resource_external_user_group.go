@@ -42,10 +42,7 @@ func resourceExternalUserGroup() *schema.Resource {
 }
 
 func resourceExternalUserGroupRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	ugID := d.Get("user_group_id").(int)
 
@@ -78,10 +75,7 @@ func resourceExternalUserGroupRead(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceExternalUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
 	ugID := d.Get("user_group_id").(int)
@@ -102,10 +96,7 @@ func resourceExternalUserGroupCreate(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceExternalUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	eugID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -132,10 +123,7 @@ func resourceExternalUserGroupUpdate(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceExternalUserGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	eugID, err := strconv.Atoi(d.Id())
 	if err != nil {

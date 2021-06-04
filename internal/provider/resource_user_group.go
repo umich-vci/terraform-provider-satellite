@@ -86,10 +86,7 @@ func resourceUserGroup() *schema.Resource {
 }
 
 func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -130,10 +127,7 @@ func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
 
@@ -165,10 +159,7 @@ func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -202,10 +193,7 @@ func resourceUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceUserGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {

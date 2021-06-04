@@ -120,10 +120,7 @@ func resourceFilter() *schema.Resource {
 }
 
 func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -258,10 +255,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	roleID := d.Get("role_id").(int)
 	resourceType := d.Get("resource_type").(string)
@@ -347,10 +341,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {
@@ -458,10 +449,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceFilterDelete(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {

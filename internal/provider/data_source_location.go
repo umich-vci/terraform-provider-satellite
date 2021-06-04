@@ -52,10 +52,7 @@ func dataSourceLocation() *schema.Resource {
 }
 
 func dataSourceLocationRead(d *schema.ResourceData, meta interface{}) error {
-	client, err := meta.(*Config).Client()
-	if err != nil {
-		return err
-	}
+	client := meta.(*apiClient).Client
 
 	searchString := d.Get("search").(string)
 
