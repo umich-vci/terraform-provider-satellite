@@ -45,7 +45,7 @@ func resourceHostCollection() *schema.Resource {
 				Optional:    true,
 			},
 			"unlimited_hosts": {
-				Description: "A boolean that controls if an unlimited number of members are allowed in the host collection. Defaults to `true`.",
+				Description: "A boolean that controls if an unlimited number of members are allowed in the host collection.",
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,

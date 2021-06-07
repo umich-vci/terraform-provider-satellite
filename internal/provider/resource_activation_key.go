@@ -61,7 +61,7 @@ func resourceActivationKey() *schema.Resource {
 				Optional:    true,
 			},
 			"unlimited_hosts": {
-				Description: "Should an unlimited number of hosts be allowed to use the activation key? Defaults to `true`.",
+				Description: "Should an unlimited number of hosts be allowed to use the activation key?",
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
