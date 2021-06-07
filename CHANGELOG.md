@@ -1,4 +1,4 @@
-## 0.4.0 (June 3, 2021)
+## 0.4.0 (unreleased)
 
 ENHANCEMENTS:
 
