@@ -1,3 +1,15 @@
+## 0.4.0 (June 3, 2021)
+
+ENHANCEMENTS:
+
+* Updated [terraform-plugin-sdk](https://github.com/umich-vci/gosatellite) to 2.6.1.
+
+* Reworked code to model the approach in
+  [terraform-provider-scaffoling](https://github.com/hashicorp/terraform-provider-scaffolding).
+
+* Added descriptions to resources and data sources to allow for usage in documentation
+  generation and in the language server.
+
 ## 0.3.3 (June 3, 2021)
 
 IMPROVEMENTS:
