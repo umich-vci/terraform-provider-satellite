@@ -1,3 +1,3 @@
 resource "satellite_location" "Tatooine" {
-    search = "name=Tatooine"
+  search = "name=Tatooine"
 }
