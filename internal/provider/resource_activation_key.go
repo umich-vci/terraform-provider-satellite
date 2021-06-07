@@ -4,66 +4,78 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
 func resourceActivationKey() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceActivationKeyCreate,
-		Read:   resourceActivationKeyRead,
-		Update: resourceActivationKeyUpdate,
-		Delete: resourceActivationKeyDelete,
+		Description: "Resource to manage a Red Hat Satellite Activation Key.",
+
+		CreateContext: resourceActivationKeyCreate,
+		ReadContext:   resourceActivationKeyRead,
+		UpdateContext: resourceActivationKeyUpdate,
+		DeleteContext: resourceActivationKeyDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The name of the activation key.  This is the value of the key that clients use to activate.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"organization_id": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Description: "The ID of the organization to associate with the activation key.",
+				Type:        schema.TypeInt,
+				Required:    true,
 			},
 			"content_view_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "The ID of the content view to associate with the activation key.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A description of the activation key.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"environment_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "The ID of the environment that contains the `content_view_id`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 			"host_collection_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of host collection IDs to associate with the activation key. Machines activated with the key will be added to these host collections.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"max_hosts": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "The maximum number of hosts allowed to use the activation key. Should not be set if `unlimited_hosts` is set to `true`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 			"unlimited_hosts": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Description: "Should an unlimited number of hosts be allowed to use the activation key? Defaults to `true`.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
 			},
 		},
 	}
 }
 
-func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
+func resourceActivationKeyRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	activationKey, resp, err := client.ActivationKeys.Get(context.Background(), akID)
@@ -74,7 +86,7 @@ func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	// set values we can directly set from struct
@@ -95,7 +107,7 @@ func resourceActivationKeyRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceActivationKeyCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
@@ -129,7 +141,7 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 
 	activationKey, _, err := client.ActivationKeys.Create(context.Background(), *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*activationKey.ID))
@@ -142,19 +154,19 @@ func resourceActivationKeyCreate(d *schema.ResourceData, meta interface{}) error
 		}
 		_, _, err := client.ActivationKeys.AssociateHostCollections(context.Background(), *activationKey.ID, hcIDs)
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 	}
 
-	return resourceActivationKeyRead(d, meta)
+	return resourceActivationKeyRead(ctx, d, meta)
 }
 
-func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceActivationKeyUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	update := false
@@ -199,7 +211,7 @@ func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error
 	if update {
 		_, _, err = client.ActivationKeys.Update(context.Background(), akID, *updateBody)
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 	}
 
@@ -237,33 +249,33 @@ func resourceActivationKeyUpdate(d *schema.ResourceData, meta interface{}) error
 		if len(hcAddList) > 0 {
 			_, _, err := client.ActivationKeys.AssociateHostCollections(context.Background(), akID, hcAddList)
 			if err != nil {
-				return err
+				return diag.FromErr(err)
 			}
 		}
 
 		if len(hcRemoveList) > 0 {
 			_, _, err := client.ActivationKeys.DisassociateHostCollections(context.Background(), akID, hcRemoveList)
 			if err != nil {
-				return err
+				return diag.FromErr(err)
 			}
 		}
 
 	}
 
-	return resourceActivationKeyRead(d, meta)
+	return resourceActivationKeyRead(ctx, d, meta)
 }
 
-func resourceActivationKeyDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceActivationKeyDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	akID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.ActivationKeys.Delete(context.Background(), akID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

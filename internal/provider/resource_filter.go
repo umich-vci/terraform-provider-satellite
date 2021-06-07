@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/umich-vci/gosatellite"
@@ -12,60 +13,73 @@ import (
 
 func resourceFilter() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceFilterCreate,
-		Read:   resourceFilterRead,
-		Update: resourceFilterUpdate,
-		Delete: resourceFilterDelete,
+		Description: "Resource to manage a permission filter for a role in Red Hat Satellite.",
+
+		CreateContext: resourceFilterCreate,
+		ReadContext:   resourceFilterRead,
+		UpdateContext: resourceFilterUpdate,
+		DeleteContext: resourceFilterDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"permission_names": {
-				Type:     schema.TypeSet,
-				Required: true,
+				Description: "A list of permission names that should be enabled in the filter. The permission names must be valid for the role specified in `resource_type`.",
+				Type:        schema.TypeSet,
+				Required:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"role_id": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Description: "The ID of the role that the filter should be created under.",
+				Type:        schema.TypeInt,
+				Required:    true,
 			},
 			"resource_type": {
+				Description:  "The resource type of the filter.  Once this is set, it cannot be changed without recreating the filter.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice(resourceTypeList, false),
 			},
 			"location_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of IDs of locations to associate with the filter. Unless `override` is set to `true` this should generally contain the `location_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"organization_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of IDs of organizations to associate with the filter. Unless `override` is set to `true` this should generally contain the `organization_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"override": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Description: "When set to true, you can specify `location_ids` and `organization_ids` to allow the role to access the `resource_type` in the specified locations and organizations.",
+				Type:        schema.TypeBool,
+				Optional:    true,
 			},
 			"search": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "If this is not set, then the filter will apply to all objects of the specified resource type. This means the value of `unlimited` will be true.  You can specify a search which can be used to limit the resources that the permission applies to. This will result in the value of `unlimited` being false. For more information see the [Red Hat documentation](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.8/html/administering_red_hat_satellite/chap-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles#sect-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles-Granular_Permission_Filtering).",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"created_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp of when the filter was created.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"locations": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the locations the filter applies to.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeMap,
 					Elem: &schema.Schema{
@@ -74,8 +88,9 @@ func resourceFilter() *schema.Resource {
 				},
 			},
 			"organizations": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the organizations the filter applies to.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeMap,
 					Elem: &schema.Schema{
@@ -84,8 +99,9 @@ func resourceFilter() *schema.Resource {
 				},
 			},
 			"permissions": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the permissions enabled in the filter.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeMap,
 					Elem: &schema.Schema{
@@ -94,37 +110,41 @@ func resourceFilter() *schema.Resource {
 				},
 			},
 			"permission_ids": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of permission IDs that match the list of permissions supplied in `permission_names`.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"role": {
-				Type:     schema.TypeMap,
-				Computed: true,
+				Description: "An object containing information about the role the filter is associated with.",
+				Type:        schema.TypeMap,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"unlimited": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "A boolean that indicates if a filter applies to all resources of the `resource_type` or just a subset of resources specified in `search`.",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"updated_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp of when the filter was last updated.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
 }
 
-func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
+func resourceFilterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	filter, resp, err := client.Filters.Get(context.Background(), filterID)
@@ -135,7 +155,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	var resourceType string
@@ -254,7 +274,7 @@ func resourceFilterRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceFilterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	roleID := d.Get("role_id").(int)
@@ -275,7 +295,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	validPermissions, _, err := client.Permissions.List(context.Background(), *permSearchOpts)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	permNames := d.Get("permission_names").(*schema.Set).List()
 	permMap := make(map[string]int)
@@ -293,7 +313,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 		if permID, ok := permMap[permNames[x].(string)]; ok {
 			permIDs = append(permIDs, permID)
 		} else {
-			return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
+			return diag.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
 		}
 	}
 	createBody.Filter.PermissionIDs = &permIDs
@@ -316,7 +336,7 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 			}
 			createBody.Filter.OrganizationIDs = &organizationIDs
 		} else {
-			return fmt.Errorf("organization_ids cannot be specified for a resource_type of Location")
+			return diag.Errorf("organization_ids cannot be specified for a resource_type of Location")
 		}
 	}
 
@@ -332,20 +352,20 @@ func resourceFilterCreate(d *schema.ResourceData, meta interface{}) error {
 
 	filter, _, err := client.Filters.Create(context.Background(), *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*filter.ID))
 
-	return resourceFilterRead(d, meta)
+	return resourceFilterRead(ctx, d, meta)
 }
 
-func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceFilterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	resourceType := d.Get("resource_type").(string)
@@ -383,7 +403,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 				updateBody.Filter.OrganizationIDs = new([]int)
 			}
 		} else {
-			return fmt.Errorf("organization_ids cannot be specified for a resource_type of Location")
+			return diag.Errorf("organization_ids cannot be specified for a resource_type of Location")
 		}
 	}
 
@@ -409,7 +429,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 
 		validPermissions, _, err := client.Permissions.List(context.Background(), *permSearchOpts)
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 		permNames := d.Get("permission_names").(*schema.Set).List()
 		permMap := make(map[string]int)
@@ -427,7 +447,7 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 			if permID, ok := permMap[permNames[x].(string)]; ok {
 				permIDs = append(permIDs, permID)
 			} else {
-				return fmt.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
+				return diag.Errorf("%s is not a valid permission for resource type %s", permNames[x].(string), resourceType)
 			}
 		}
 		updateBody.Filter.PermissionIDs = &permIDs
@@ -442,23 +462,23 @@ func resourceFilterUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	_, _, err = client.Filters.Update(context.Background(), filterID, *updateBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceFilterRead(d, meta)
+	return resourceFilterRead(ctx, d, meta)
 }
 
-func resourceFilterDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceFilterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	filterID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.Filters.Delete(context.Background(), filterID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

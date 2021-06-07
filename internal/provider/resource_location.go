@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/umich-vci/gosatellite"
@@ -11,37 +12,44 @@ import (
 
 func resourceLocation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceLocationCreate,
-		Read:   resourceLocationRead,
-		Update: resourceLocationUpdate,
-		Delete: resourceLocationDelete,
+		Description: "Resource to manage a Red Hat Satellite location.",
+
+		CreateContext: resourceLocationCreate,
+		ReadContext:   resourceLocationRead,
+		UpdateContext: resourceLocationUpdate,
+		DeleteContext: resourceLocationDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
+				Description:  "A name for the location.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A description of the location.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"parent_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "The ID of a parent for this location. This allows you to nest locations. If not set, a top level location is created.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 		},
 	}
 }
 
-func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
+func resourceLocationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	location, resp, err := client.Locations.Get(context.Background(), locationID)
@@ -52,7 +60,7 @@ func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.Set("name", location.Name)
@@ -62,7 +70,7 @@ func resourceLocationRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceLocationCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceLocationCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
@@ -81,20 +89,20 @@ func resourceLocationCreate(d *schema.ResourceData, meta interface{}) error {
 
 	location, _, err := client.Locations.Create(context.Background(), *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*location.ID))
 
-	return resourceLocationRead(d, meta)
+	return resourceLocationRead(ctx, d, meta)
 }
 
-func resourceLocationUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceLocationUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	updateBody := new(gosatellite.LocationUpdate)
@@ -113,23 +121,23 @@ func resourceLocationUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	_, _, err = client.Locations.Update(context.Background(), locationID, *updateBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceLocationRead(d, meta)
+	return resourceLocationRead(ctx, d, meta)
 }
 
-func resourceLocationDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceLocationDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	locationID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.Locations.Delete(context.Background(), locationID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")
