@@ -3,70 +3,88 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
 func dataSourceProducts() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceProductsRead,
+		Description: "Data source to access information about available Red Hat Satellite products.",
+
+		ReadContext: dataSourceProductsRead,
+
 		Schema: map[string]*schema.Schema{
 			"organization_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "An Organization ID to filter the product search on.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 			"red_hat_only": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Description: "A boolean that controls if the search should only return Red Hat products.",
+				Type:        schema.TypeBool,
+				Optional:    true,
 			},
 			"product_name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A product name to filter the product search on.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"products": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing information on the products.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cp_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"gpg_key_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"label": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"last_sync": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"last_sync_words": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"provider_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"repository_count": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 					},
 				},
@@ -75,7 +93,7 @@ func dataSourceProducts() *schema.Resource {
 	}
 }
 
-func dataSourceProductsRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceProductsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	pOptions := new(gosatellite.ProductsListOptions)
@@ -94,7 +112,7 @@ func dataSourceProductsRead(d *schema.ResourceData, meta interface{}) error {
 
 	products, _, err := client.Products.List(context.Background(), pOptions)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	//d.SetId(strconv.Itoa(orgID))

@@ -2,9 +2,9 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/umich-vci/gosatellite"
@@ -12,44 +12,56 @@ import (
 
 func dataSourceAuthSourceLDAP() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceAuthSourceLDAPRead,
+		Description: "Data source to access information about a Red Hat Satellite LDAP Authentication Source.",
+
+		ReadContext: dataSourceAuthSourceLDAPRead,
+
 		Schema: map[string]*schema.Schema{
 			"search": {
+				Description:  "A search filter for the LDAP Authentication Source search. The search must only return 1 authentication source.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"account": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The DN of the LDAP Bind Account.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"attr_firstname": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The LDAP attribute that maps to first name.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"attr_lastname": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "The LDAP attribute that maps to last name.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"attr_login": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The LDAP attribute that maps to username.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"attr_mail": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The LDAP attribute that maps to email address.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"attr_photo": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "The LDAP attribute that maps to a photo.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"base_dn": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The base DN from which LDAP searches will be performed.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"created_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Timestamp of when the LDAP authentication source was created.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			// "external_usergroups": &schema.Schema{
 			// 	Type:     schema.TypeList,
@@ -59,16 +71,19 @@ func dataSourceAuthSourceLDAP() *schema.Resource {
 			// 	},
 			// },
 			"groups_base": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The base DN from which LDAP searches for groups will be performed.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"host": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The hostname of the LDAP server.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"ldap_filter": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			// "locations": &schema.Schema{
 			// 	Type:     schema.TypeList,
@@ -78,12 +93,14 @@ func dataSourceAuthSourceLDAP() *schema.Resource {
 			// 	},
 			// },
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The name of the LDAP authentication source.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"onthefly_register": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			// "organizations": &schema.Schema{
 			// 	Type:     schema.TypeList,
@@ -93,38 +110,45 @@ func dataSourceAuthSourceLDAP() *schema.Resource {
 			// 	},
 			// },
 			"port": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "The port the LDAP server is listening on.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"server_type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The type of the LDAP server.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"tls": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "Is TLS enabled for the LDAP server?",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"use_netgroups": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"updated_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Timestamp of when the LDAP authentication source was last updated.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"usergroup_sync": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 		},
 	}
 }
 
-func dataSourceAuthSourceLDAPRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceAuthSourceLDAPRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	searchString := d.Get("search").(string)
@@ -134,17 +158,17 @@ func dataSourceAuthSourceLDAPRead(d *schema.ResourceData, meta interface{}) erro
 
 	authSourcesResp, _, err := client.AuthSourceLDAPs.List(context.Background(), opt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	authSources := *authSourcesResp.Results
 
 	if len(authSources) == 0 {
-		return fmt.Errorf("No LDAP Auth Sources found for search string %s", searchString)
+		return diag.Errorf("No LDAP Auth Sources found for search string %s", searchString)
 	}
 
 	if len(authSources) > 1 {
-		return fmt.Errorf("%d LDAP Auth Sources found for search string %s", len(authSources), searchString)
+		return diag.Errorf("%d LDAP Auth Sources found for search string %s", len(authSources), searchString)
 	}
 
 	d.SetId(strconv.Itoa(*authSources[0].ID))

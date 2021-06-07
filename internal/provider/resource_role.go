@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/umich-vci/gosatellite"
@@ -11,114 +12,136 @@ import (
 
 func resourceRole() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceRoleCreate,
-		Read:   resourceRoleRead,
-		Update: resourceRoleUpdate,
-		Delete: resourceRoleDelete,
+		Description: "Resource to manage a role in Red Hat Satellite.",
+
+		CreateContext: resourceRoleCreate,
+		ReadContext:   resourceRoleRead,
+		UpdateContext: resourceRoleUpdate,
+		DeleteContext: resourceRoleDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
+				Description:  "A name for the role.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A description of the role.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"location_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of IDs of locations to associate with the role.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"organization_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of IDs of organizations to associate with the role.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"builtin": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "A boolean that indicates if the role is a default/builtin role.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"cloned_from_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "If this role was cloned using the API, the ID number of the source role.",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"filters": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of filter IDs associated with the role.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"locations": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the locations the role applies to.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The description of a location the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "The ID of a location the filter applies to.",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The name of a location the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"title": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The title of a location the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
 			},
 			"organizations": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the organizations the role applies to.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The description of an organization the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "The ID of an organization the filter applies to.",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The name of an organization the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"title": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The title of an organization the filter applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
 			},
 			"origin": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "TODO",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
 }
 
-func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
+func resourceRoleRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	role, resp, err := client.Roles.Get(context.Background(), roleID)
@@ -129,7 +152,7 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	var locationIDs []int
@@ -176,7 +199,7 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceRoleCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
@@ -211,20 +234,20 @@ func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
 
 	role, _, err := client.Roles.Create(context.Background(), *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*role.ID))
 
-	return resourceRoleRead(d, meta)
+	return resourceRoleRead(ctx, d, meta)
 }
 
-func resourceRoleUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	updateBody := new(gosatellite.RoleUpdate)
@@ -255,23 +278,23 @@ func resourceRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	_, _, err = client.Roles.Update(context.Background(), roleID, *updateBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceRoleRead(d, meta)
+	return resourceRoleRead(ctx, d, meta)
 }
 
-func resourceRoleDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceRoleDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	roleID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.Roles.Delete(context.Background(), roleID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

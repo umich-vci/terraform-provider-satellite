@@ -4,60 +4,72 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
 func resourceHostCollection() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceHostCollectionCreate,
-		Read:   resourceHostCollectionRead,
-		Update: resourceHostCollectionUpdate,
-		Delete: resourceHostCollectionDelete,
+		Description: "Resource to manage a Red Hat Satellite Host Collection.",
+
+		CreateContext: resourceHostCollectionCreate,
+		ReadContext:   resourceHostCollectionRead,
+		UpdateContext: resourceHostCollectionUpdate,
+		DeleteContext: resourceHostCollectionDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The name of the host collection.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"organization_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-				ForceNew: true,
+				Description: "The ID of organization that the host collection should be created in. Once set, it cannot be changed without recreating the resource.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A description of the host collection.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"max_hosts": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Description: "The maximum number of hosts allowed to be in the host collection. Should not be set if `unlimited_hosts` is set to `true`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
 			},
 			"unlimited_hosts": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Description: "A boolean that controls if an unlimited number of members are allowed in the host collection. Defaults to `true`.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
 			},
 			"created_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp containing when the host collection was created.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"updated_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp containing when the host collection was last changed.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
 }
 
-func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error {
+func resourceHostCollectionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	hc, resp, err := client.HostCollections.Get(context.Background(), hcID)
@@ -68,7 +80,7 @@ func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error 
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.Set("name", hc.Name)
@@ -82,7 +94,7 @@ func resourceHostCollectionRead(d *schema.ResourceData, meta interface{}) error 
 	return nil
 }
 
-func resourceHostCollectionCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceHostCollectionCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
@@ -104,20 +116,20 @@ func resourceHostCollectionCreate(d *schema.ResourceData, meta interface{}) erro
 
 	hc, _, err := client.HostCollections.Create(context.Background(), orgID, *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*hc.ID))
 
-	return resourceHostCollectionRead(d, meta)
+	return resourceHostCollectionRead(ctx, d, meta)
 }
 
-func resourceHostCollectionUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceHostCollectionUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	updateBody := new(gosatellite.HostCollectionUpdate)
@@ -144,23 +156,23 @@ func resourceHostCollectionUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	_, _, err = client.HostCollections.Update(context.Background(), hcID, *updateBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceHostCollectionRead(d, meta)
+	return resourceHostCollectionRead(ctx, d, meta)
 }
 
-func resourceHostCollectionDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceHostCollectionDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	hcID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.HostCollections.Delete(context.Background(), hcID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

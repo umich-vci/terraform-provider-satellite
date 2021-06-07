@@ -3,34 +3,42 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
 func dataSourcePermissions() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourcePermissionsRead,
+		Description: "Data source to access information about available Red Hat Satellite permissions.",
+
+		ReadContext: dataSourcePermissionsRead,
 		Schema: map[string]*schema.Schema{
 			"search": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A search filter for the permission search. If not specified all permissions are returned.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"permissions": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of permissions.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "The ID of the permission.",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The name of the permission.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"resource_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The resource type the permission applies to.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
@@ -39,7 +47,7 @@ func dataSourcePermissions() *schema.Resource {
 	}
 }
 
-func dataSourcePermissionsRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourcePermissionsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	searchOpt := new(gosatellite.PermissionsListOptions)
@@ -50,7 +58,7 @@ func dataSourcePermissionsRead(d *schema.ResourceData, meta interface{}) error {
 
 	perms, _, err := client.Permissions.List(context.Background(), *searchOpt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("-")

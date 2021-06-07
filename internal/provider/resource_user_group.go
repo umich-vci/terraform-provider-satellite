@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/umich-vci/gosatellite"
@@ -11,22 +12,28 @@ import (
 
 func resourceUserGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUserGroupCreate,
-		Read:   resourceUserGroupRead,
-		Update: resourceUserGroupUpdate,
-		Delete: resourceUserGroupDelete,
+		Description: "Resource to manage a user group in Red Hat Satellite.",
+
+		CreateContext: resourceUserGroupCreate,
+		ReadContext:   resourceUserGroupRead,
+		UpdateContext: resourceUserGroupUpdate,
+		DeleteContext: resourceUserGroupDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
+				Description:  "A name for the user group.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"admin": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Description: "If set to true, then the group will grant administrator privileges.",
+				Type:        schema.TypeBool,
+				Optional:    true,
 			},
 			// "user_ids": {
 			// 	Type:     schema.TypeSet,
@@ -43,40 +50,48 @@ func resourceUserGroup() *schema.Resource {
 			// 	},
 			// },
 			"role_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A list of IDs of roles to associate with the group.",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 			"created_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp containing when the user group was created.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"updated_at": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A timestamp containing when the user group was last changed.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"roles": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing the roles the associated with the user group.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "A description of a role associated with the user group.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Description: "The ID of a role associated with the user group.",
+							Type:        schema.TypeInt,
+							Computed:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The name of a role associated with the user group.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"origin": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The origin of a role associated with the user group.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
@@ -85,12 +100,12 @@ func resourceUserGroup() *schema.Resource {
 	}
 }
 
-func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
+func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	ug, resp, err := client.UserGroups.Get(context.Background(), ugID)
@@ -101,7 +116,7 @@ func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	roleIDs := []int{}
@@ -126,7 +141,7 @@ func resourceUserGroupRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	name := d.Get("name").(string)
@@ -150,20 +165,20 @@ func resourceUserGroupCreate(d *schema.ResourceData, meta interface{}) error {
 
 	ug, _, err := client.UserGroups.Create(context.Background(), *createBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(*ug.ID))
 
-	return resourceUserGroupRead(d, meta)
+	return resourceUserGroupRead(ctx, d, meta)
 }
 
-func resourceUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceUserGroupUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	updateBody := new(gosatellite.UserGroupUpdate)
@@ -187,22 +202,22 @@ func resourceUserGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	_, _, err = client.UserGroups.Update(context.Background(), ugID, *updateBody)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
-	return resourceUserGroupRead(d, meta)
+	return resourceUserGroupRead(ctx, d, meta)
 }
 
-func resourceUserGroupDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	ugID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, _, err = client.UserGroups.Delete(context.Background(), ugID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

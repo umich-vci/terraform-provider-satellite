@@ -5,49 +5,61 @@ import (
 	"encoding/base64"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceSubscriptionManifest() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSubscriptionManifestCreate,
-		Read:   resourceSubscriptionManifestRead,
-		Update: resourceSubscriptionManifestUpdate,
-		Delete: resourceSubscriptionManifestDelete,
+		Description: "Resource to manage a subscription manifest attached to a Red Hat Satellite organization.",
+
+		CreateContext: resourceSubscriptionManifestCreate,
+		ReadContext:   resourceSubscriptionManifestRead,
+		UpdateContext: resourceSubscriptionManifestUpdate,
+		DeleteContext: resourceSubscriptionManifestDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"organization_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-				ForceNew: true,
+				Description: "The organization ID you want to attach the manifest to.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"manifest": {
-				Type:      schema.TypeString,
-				Required:  true,
-				Sensitive: true,
+				Description: "A Base64 encoded string of a manifest zip file downloaded from Red Hat Subscription Management. Most easily used in conjunction with [`rhsm_allocation_manifest` resource from the RHSM provider](https://registry.terraform.io/providers/umich-vci/rhsm/latest/docs/resources/allocation_manifest).",
+				Type:        schema.TypeString,
+				Required:    true,
+				Sensitive:   true,
 			},
 			"history": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Description: "A list of objects containing information on operations peformed on the manifest.",
+				Type:        schema.TypeList,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"created": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"status": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"status_message": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "TODO",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
@@ -56,12 +68,12 @@ func resourceSubscriptionManifest() *schema.Resource {
 	}
 }
 
-func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) error {
+func resourceSubscriptionManifestRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	hist, resp, err := client.Manifests.GetHistory(context.Background(), orgID)
@@ -72,7 +84,7 @@ func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) 
 				return nil
 			}
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	histList := []map[string]interface{}{}
@@ -92,7 +104,7 @@ func resourceSubscriptionManifestRead(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceSubscriptionManifestCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID := d.Get("organization_id").(int)
@@ -100,46 +112,46 @@ func resourceSubscriptionManifestCreate(d *schema.ResourceData, meta interface{}
 	manifestString := d.Get("manifest").(string)
 	manifest, err := base64.StdEncoding.DecodeString(manifestString)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, _, err = client.Manifests.Upload(context.Background(), orgID, nil, manifest, "manifest.zip")
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(orgID))
 
-	return resourceSubscriptionManifestRead(d, meta)
+	return resourceSubscriptionManifestRead(ctx, d, meta)
 }
 
-func resourceSubscriptionManifestUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceSubscriptionManifestUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.Manifests.Refresh(context.Background(), orgID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceSubscriptionManifestRead(d, meta)
+	return resourceSubscriptionManifestRead(ctx, d, meta)
 }
 
-func resourceSubscriptionManifestDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceSubscriptionManifestDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	orgID, err := strconv.Atoi(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	_, err = client.Manifests.Delete(context.Background(), orgID)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")
