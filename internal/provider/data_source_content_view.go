@@ -149,15 +149,15 @@ func dataSourceContentViewRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if name, ok := d.GetOk("name"); ok {
-		opt.Search = name.(string)
+		opt.Name = name.(string)
 	}
 
 	if noncomposite, ok := d.GetOk("noncomposite"); ok {
-		opt.Composite = noncomposite.(bool)
+		opt.Noncomposite = noncomposite.(bool)
 	}
 
 	if nondefault, ok := d.GetOk("nondefault"); ok {
-		opt.Composite = nondefault.(bool)
+		opt.Nondefault = nondefault.(bool)
 	}
 
 	if orgID, ok := d.GetOk("organization_id"); ok {
