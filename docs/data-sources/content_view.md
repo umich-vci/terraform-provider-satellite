@@ -23,36 +23,36 @@ resource "satellite_content_view" "default" {
 
 ### Optional
 
-- **composite** (Boolean)
-- **environment_id** (Number)
+- **composite** (Boolean) Is the Content View a composite view?
+- **environment_id** (Number) The ID of a Lifecycle Environment to look for the Content View in.
 - **id** (String) The ID of this resource.
-- **name** (String)
-- **noncomposite** (Boolean)
-- **nondefault** (Boolean)
-- **organization_id** (Number)
-- **repository_ids** (List of Number)
-- **search** (String)
-- **without** (Set of String)
+- **name** (String) The name of the Content View.
+- **noncomposite** (Boolean) Is the Content View not a composite view?
+- **nondefault** (Boolean) Is the Content View a non-default view?
+- **organization_id** (Number) The ID of the organization that contains the Content View.
+- **repository_ids** (List of Number) A list of repository IDs contained in the Content View.
+- **search** (String) A search filter for the Content View search. The search must only return 1 Content View.
+- **without** (Set of String) TODO
 
 ### Read-Only
 
-- **activation_keys** (List of Number)
-- **auto_publish** (Boolean)
-- **component_ids** (List of Number)
-- **created_at** (String)
-- **default** (Boolean)
-- **description** (String)
-- **environments** (List of Number)
-- **force_puppet_environment** (Boolean)
-- **label** (String)
-- **last_published** (String)
-- **latest_version** (String)
-- **next_version** (String)
-- **organization** (Map of String)
-- **repositories** (List of Number)
-- **solve_dependencies** (Boolean)
-- **updated_at** (String)
-- **version_count** (Number)
-- **versions** (List of Number)
+- **activation_keys** (List of Number) A list of Activation Keys that reference the Content View.
+- **auto_publish** (Boolean) Is auto publish enabled for the Content View?
+- **component_ids** (List of Number) A list of component IDs contained in the Content View.
+- **created_at** (String) Timestamp of when the Content View was created.
+- **default** (Boolean) Is the Content View a default view?
+- **description** (String) A description of the Content View.
+- **environments** (List of Number) A list of Lifecycle Environments containing the Content View.
+- **force_puppet_environment** (Boolean) TODO
+- **label** (String) A label for the Content View.
+- **last_published** (String) Timestamp of when the Content View was last published.
+- **latest_version** (String) The latest version of the Content View.
+- **next_version** (String) The next proceeding version of the Content View.
+- **organization** (Map of String) The organization that contains the Content View.
+- **repositories** (List of Number) A list of repositories contained in the Content View.
+- **solve_dependencies** (Boolean) TODO
+- **updated_at** (String) Timestamp of when the Content View was last updated.
+- **version_count** (Number) The number of versions of the Content View.
+- **versions** (List of Number) A list of the versions of the Content View.
 
 
