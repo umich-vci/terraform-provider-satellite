@@ -86,13 +86,13 @@ func dataSourceLocationRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	d.SetId(strconv.Itoa(*locationList[0].ID))
-	d.Set("created_at", *locationList[0].CreatedAt)
-	d.Set("description", *locationList[0].Description)
-	d.Set("name", *locationList[0].Name)
-	d.Set("parent_id", *locationList[0].ParentID)
-	d.Set("parent_name", *locationList[0].ParentName)
-	d.Set("title", *locationList[0].Title)
-	d.Set("updated_at", *locationList[0].UpdatedAt)
+	d.Set("created_at", locationList[0].CreatedAt)
+	d.Set("description", locationList[0].Description)
+	d.Set("name", locationList[0].Name)
+	d.Set("parent_id", locationList[0].ParentID)
+	d.Set("parent_name", locationList[0].ParentName)
+	d.Set("title", locationList[0].Title)
+	d.Set("updated_at", locationList[0].UpdatedAt)
 
 	return nil
 }
