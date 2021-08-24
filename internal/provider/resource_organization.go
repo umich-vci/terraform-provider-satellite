@@ -19,7 +19,7 @@ func resourceOrganization() *schema.Resource {
 		DeleteContext: resourceOrganizationDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{

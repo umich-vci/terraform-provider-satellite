@@ -20,7 +20,7 @@ func resourceRole() *schema.Resource {
 		DeleteContext: resourceRoleDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{

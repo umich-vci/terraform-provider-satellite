@@ -20,7 +20,7 @@ func resourceExternalUserGroup() *schema.Resource {
 		DeleteContext: resourceExternalUserGroupDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -75,9 +75,11 @@ func resourceExternalUserGroupRead(ctx context.Context, d *schema.ResourceData, 
 	d.Set("auth_source_id", eug.AuthSourceLDAP.ID)
 
 	authSourceLDAP := make(map[string]interface{})
-	authSourceLDAP["id"] = eug.AuthSourceLDAP.ID
-	authSourceLDAP["name"] = eug.AuthSourceLDAP.Name
-	authSourceLDAP["type"] = eug.AuthSourceLDAP.Type
+	if eug.AuthSourceLDAP != nil {
+		authSourceLDAP["id"] = eug.AuthSourceLDAP.ID
+		authSourceLDAP["name"] = eug.AuthSourceLDAP.Name
+		authSourceLDAP["type"] = eug.AuthSourceLDAP.Type
+	}
 	d.Set("auth_source_ldap", authSourceLDAP)
 
 	return nil
