@@ -3,12 +3,12 @@
 page_title: "satellite_lifecycle_environment Data Source - terraform-provider-satellite"
 subcategory: ""
 description: |-
-  
+  Data source to access information about a Red Hat Satellite Lifecycle Environment.
 ---
 
 # satellite_lifecycle_environment (Data Source)
 
-
+Data source to access information about a Red Hat Satellite Lifecycle Environment.
 
 ## Example Usage
 

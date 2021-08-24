@@ -59,7 +59,7 @@ func New(version string) func() *schema.Provider {
 			DataSourcesMap: map[string]*schema.Resource{
 				"satellite_auth_source_ldap":      dataSourceAuthSourceLDAP(),
 				"satellite_content_view":          dataSourceContentView(),
-				"satellite_lifecycle_environment": dataSourceLifeCycleEnvironment(),
+				"satellite_lifecycle_environment": dataSourceLifecycleEnvironment(),
 				"satellite_location":              dataSourceLocation(),
 				"satellite_organization":          dataSourceOrganization(),
 				"satellite_permissions":           dataSourcePermissions(),

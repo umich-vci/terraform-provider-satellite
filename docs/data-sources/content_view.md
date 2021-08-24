@@ -3,12 +3,12 @@
 page_title: "satellite_content_view Data Source - terraform-provider-satellite"
 subcategory: ""
 description: |-
-  
+  Data source to access information about a Red Hat Satellite Content View.
 ---
 
 # satellite_content_view (Data Source)
 
-
+Data source to access information about a Red Hat Satellite Content View.
 
 ## Example Usage
 

@@ -2,16 +2,19 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
-func dataSourceLifeCycleEnvironment() *schema.Resource {
+func dataSourceLifecycleEnvironment() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceLifeCycleEnvironmentRead,
+		Description: "Data source to access information about a Red Hat Satellite Lifecycle Environment.",
+
+		ReadContext: dataSourceLifecycleEnvironmentRead,
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "The name of the Lifecycle Environment.",
@@ -94,7 +97,7 @@ func dataSourceLifeCycleEnvironment() *schema.Resource {
 	}
 }
 
-func dataSourceLifeCycleEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceLifecycleEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	opt := new(gosatellite.LifecycleEnvironmentsListOptions)
@@ -113,17 +116,17 @@ func dataSourceLifeCycleEnvironmentRead(d *schema.ResourceData, meta interface{}
 
 	le, _, err := client.LifecycleEnvironments.List(context.Background(), opt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	leList := *le.Results
 
 	if len(leList) == 0 {
-		return fmt.Errorf("No Lifecyle Environment found")
+		return diag.Errorf("No Lifecyle Environment found")
 	}
 
 	if len(leList) > 1 {
-		return fmt.Errorf("%d Lifecyle Environments found, adjust arguments so only 1 is returned", len(leList))
+		return diag.Errorf("%d Lifecyle Environments found, adjust arguments so only 1 is returned", len(leList))
 	}
 
 	d.SetId(strconv.Itoa(int(*leList[0].ID)))
