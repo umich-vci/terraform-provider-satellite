@@ -100,7 +100,7 @@ func resourceFilter() *schema.Resource {
 			},
 			"permissions": {
 				Description: "A list of objects containing the permissions enabled in the filter.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeMap,
@@ -111,7 +111,7 @@ func resourceFilter() *schema.Resource {
 			},
 			"permission_ids": {
 				Description: "A list of permission IDs that match the list of permissions supplied in `permission_names`.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,

@@ -49,8 +49,8 @@ resource "satellite_filter" "miscellaneous" {
 - **created_at** (String) A timestamp of when the filter was created.
 - **locations** (List of Map of String) A list of objects containing the locations the filter applies to.
 - **organizations** (List of Map of String) A list of objects containing the organizations the filter applies to.
-- **permission_ids** (List of Number) A list of permission IDs that match the list of permissions supplied in `permission_names`.
-- **permissions** (List of Map of String) A list of objects containing the permissions enabled in the filter.
+- **permission_ids** (Set of Number) A list of permission IDs that match the list of permissions supplied in `permission_names`.
+- **permissions** (Set of Map of String) A list of objects containing the permissions enabled in the filter.
 - **role** (Map of String) An object containing information about the role the filter is associated with.
 - **unlimited** (Boolean) A boolean that indicates if a filter applies to all resources of the `resource_type` or just a subset of resources specified in `search`.
 - **updated_at** (String) A timestamp of when the filter was last updated.
