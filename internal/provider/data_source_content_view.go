@@ -2,16 +2,19 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/umich-vci/gosatellite"
 )
 
 func dataSourceContentView() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceContentViewRead,
+		Description: "Data source to access information about a Red Hat Satellite Content View.",
+
+		ReadContext: dataSourceContentViewRead,
+
 		Schema: map[string]*schema.Schema{
 			"composite": {
 				Description: "Is the Content View a composite view?",
@@ -162,7 +165,7 @@ func dataSourceContentView() *schema.Resource {
 	}
 }
 
-func dataSourceContentViewRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceContentViewRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*apiClient).Client
 
 	opt := new(gosatellite.ContentViewsListOptions)
@@ -206,17 +209,17 @@ func dataSourceContentViewRead(d *schema.ResourceData, meta interface{}) error {
 
 	cv, _, err := client.ContentViews.List(context.Background(), opt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	cvList := *cv.Results
 
 	if len(cvList) == 0 {
-		return fmt.Errorf("No Content Views found")
+		return diag.Errorf("No Content Views found")
 	}
 
 	if len(cvList) > 1 {
-		return fmt.Errorf("%d Content Views found, adjust arguments so only 1 is returned", len(cvList))
+		return diag.Errorf("%d Content Views found, adjust arguments so only 1 is returned", len(cvList))
 	}
 
 	d.SetId(strconv.Itoa(int(*cvList[0].ID)))
