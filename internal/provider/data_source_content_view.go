@@ -127,6 +127,9 @@ func dataSourceContentView() *schema.Resource {
 				Description: "The organization that contains the Content View.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"repositories": {
 				Description: "A list of repositories contained in the Content View.",
@@ -242,7 +245,7 @@ func dataSourceContentViewRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	organization := make(map[string]interface{})
-	organization["id"] = cvList[0].Organization.ID
+	organization["id"] = strconv.Itoa(*cvList[0].Organization.ID)
 	organization["name"] = cvList[0].Organization.Name
 	organization["label"] = cvList[0].Organization.Label
 
