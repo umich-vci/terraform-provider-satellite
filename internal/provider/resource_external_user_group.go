@@ -45,6 +45,9 @@ func resourceExternalUserGroup() *schema.Resource {
 				Description: "A list of objects containing the authentication source the associated with the external user group.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
@@ -76,7 +79,7 @@ func resourceExternalUserGroupRead(ctx context.Context, d *schema.ResourceData, 
 
 	authSourceLDAP := make(map[string]interface{})
 	if eug.AuthSourceLDAP != nil {
-		authSourceLDAP["id"] = eug.AuthSourceLDAP.ID
+		authSourceLDAP["id"] = strconv.Itoa(*eug.AuthSourceLDAP.ID)
 		authSourceLDAP["name"] = eug.AuthSourceLDAP.Name
 		authSourceLDAP["type"] = eug.AuthSourceLDAP.Type
 	}
