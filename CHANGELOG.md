@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 
-* Updated [terraform-plugin-sdk](https://github.com/umich-vci/gosatellite) to 2.6.1.
+* Updated [terraform-plugin-sdk](https://github.com/umich-vci/gosatellite) to 2.7.0.
 
 * Reworked code to model the approach in
   [terraform-provider-scaffoling](https://github.com/hashicorp/terraform-provider-scaffolding).
@@ -11,6 +11,8 @@ ENHANCEMENTS:
   generation and in the language server.
 
 * **New Data Source:** `satellite_content_view`
+
+* **New Data Source:** `satellite_lifecycle_environment`
 
 ## 0.3.3 (June 3, 2021)
 
