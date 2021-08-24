@@ -37,6 +37,9 @@ func dataSourceLifecycleEnvironment() *schema.Resource {
 				Description: "A map of various counts of attributes of the Lifecycle Environment.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 			},
 			"created_at": {
 				Description: "Timestamp of when the Lifecycle Environment was created.",
@@ -62,16 +65,25 @@ func dataSourceLifecycleEnvironment() *schema.Resource {
 				Description: "The organization that contains the Lifecycle Environment.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"permissions": {
 				Description: "The current Satellite user's permissions for the Lifecycle Environment.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeBool,
+				},
 			},
 			"prior": {
 				Description: "The Lifecycle Environment directly before this one.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"registry_name_pattern": {
 				Description: "TODO",
@@ -87,6 +99,9 @@ func dataSourceLifecycleEnvironment() *schema.Resource {
 				Description: "The Lifecycle Environment directly after this one.",
 				Type:        schema.TypeMap,
 				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"updated_at": {
 				Description: "Timestamp of when the Lifecycle Environment was last updated.",
@@ -135,15 +150,13 @@ func dataSourceLifecycleEnvironmentRead(ctx context.Context, d *schema.ResourceD
 	if leList[0].Counts != nil {
 		counts["content_hosts"] = leList[0].Counts.ContentHosts
 		counts["content_views"] = leList[0].Counts.ContentViews
-		counts["content_hosts"] = leList[0].Counts.DockerRepositories
-		errataCounts := make(map[string]interface{})
+		counts["docker_repositories"] = leList[0].Counts.DockerRepositories
 		if leList[0].Counts.Errata != nil {
-			errataCounts["bugfix"] = leList[0].Counts.Errata.Bugfix
-			errataCounts["enhancement"] = leList[0].Counts.Errata.Enhancement
-			errataCounts["security"] = leList[0].Counts.Errata.Security
-			errataCounts["total"] = leList[0].Counts.Errata.Total
+			counts["errata_bugfix"] = leList[0].Counts.Errata.Bugfix
+			counts["errata_enhancement"] = leList[0].Counts.Errata.Enhancement
+			counts["errata_security"] = leList[0].Counts.Errata.Security
+			counts["errata_total"] = leList[0].Counts.Errata.Total
 		}
-		counts["errata"] = errataCounts
 		counts["module_streams"] = leList[0].Counts.ModuleStreams
 		counts["os_tree_repositories"] = leList[0].Counts.OSTreeRepositories
 		counts["packages"] = leList[0].Counts.Packages
@@ -154,7 +167,7 @@ func dataSourceLifecycleEnvironmentRead(ctx context.Context, d *schema.ResourceD
 
 	organization := make(map[string]interface{})
 	if leList[0].Organization != nil {
-		organization["id"] = leList[0].Organization.ID
+		organization["id"] = strconv.Itoa(*leList[0].Organization.ID)
 		organization["name"] = leList[0].Organization.Name
 		organization["label"] = leList[0].Organization.Label
 	}
@@ -170,13 +183,13 @@ func dataSourceLifecycleEnvironmentRead(ctx context.Context, d *schema.ResourceD
 
 	prior := make(map[string]interface{})
 	if leList[0].Prior != nil {
-		prior["id"] = leList[0].Prior.ID
+		prior["id"] = strconv.Itoa(*leList[0].Prior.ID)
 		prior["name"] = leList[0].Prior.Name
 	}
 
 	successor := make(map[string]interface{})
 	if leList[0].Successor != nil {
-		successor["id"] = leList[0].Successor.ID
+		successor["id"] = strconv.Itoa(*leList[0].Successor.ID)
 		successor["name"] = leList[0].Successor.Name
 	}
 
@@ -189,9 +202,9 @@ func dataSourceLifecycleEnvironmentRead(ctx context.Context, d *schema.ResourceD
 	d.Set("organization", organization)
 	d.Set("organization_id", leList[0].OrganizationID)
 	d.Set("permissions", permissions)
-	d.Set("prior", prior)
 	d.Set("registry_name_pattern", leList[0].RegistryNamePattern)
 	d.Set("registry_unauthenticated_pull", leList[0].RegistryUnauthenticatedPull)
+	d.Set("prior", prior)
 	d.Set("successor", successor)
 	d.Set("updated_at", leList[0].UpdatedAt)
 
