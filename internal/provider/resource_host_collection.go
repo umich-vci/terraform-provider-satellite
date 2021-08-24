@@ -19,7 +19,7 @@ func resourceHostCollection() *schema.Resource {
 		DeleteContext: resourceHostCollectionDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
