@@ -31,13 +31,13 @@ resource "satellite_lifecycle_environment" "library" {
 
 ### Read-Only
 
-- **counts** (Map of String) A map of various counts of attributes of the Lifecycle Environment.
+- **counts** (Map of Number) A map of various counts of attributes of the Lifecycle Environment.
 - **created_at** (String) Timestamp of when the Lifecycle Environment was created.
 - **description** (String) A description of the Lifecycle Environment.
 - **label** (String) A label for the Lifecycle Environment.
 - **library** (Boolean) Is the Lifecycle Environment a base Library?
 - **organization** (Map of String) The organization that contains the Lifecycle Environment.
-- **permissions** (Map of String) The current Satellite user's permissions for the Lifecycle Environment.
+- **permissions** (Map of Boolean) The current Satellite user's permissions for the Lifecycle Environment.
 - **prior** (Map of String) The Lifecycle Environment directly before this one.
 - **registry_name_pattern** (String) TODO
 - **registry_unauthenticated_pull** (Boolean) TODO
