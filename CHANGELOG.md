@@ -1,4 +1,12 @@
-## 0.4.1 (February 25, 2022)
+## 0.5.0 (February 25, 2022)
+
+ENHANCEMENTS:
+
+* Update GitHub workflows to build for Darwin arm64
+* Updated [terraform-plugin-sdk](https://github.com/hashicorp/terraform-plugin-sdk) to 2.10.1.
+* Updated [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs) to 0.5.0.
+
+## 0.4.1 (not released - didn't build)
 
 ENHANCEMENTS:
 
