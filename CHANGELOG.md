@@ -1,3 +1,9 @@
+## 0.4.1 (February 25, 2022)
+
+ENHANCEMENTS:
+
+* Update GitHub workflows to build for Darwin arm64
+
 ## 0.4.0 (August 24, 2021)
 
 ENHANCEMENTS:
