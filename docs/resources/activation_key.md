@@ -23,17 +23,20 @@ resource "satellite_activation_key" "key" {
 
 ### Required
 
-- **name** (String) The name of the activation key.  This is the value of the key that clients use to activate.
-- **organization_id** (Number) The ID of the organization to associate with the activation key.
+- `name` (String) The name of the activation key.  This is the value of the key that clients use to activate.
+- `organization_id` (Number) The ID of the organization to associate with the activation key.
 
 ### Optional
 
-- **content_view_id** (Number) The ID of the content view to associate with the activation key.
-- **description** (String) A description of the activation key.
-- **environment_id** (Number) The ID of the environment that contains the `content_view_id`.
-- **host_collection_ids** (Set of Number) A list of host collection IDs to associate with the activation key. Machines activated with the key will be added to these host collections.
-- **id** (String) The ID of this resource.
-- **max_hosts** (Number) The maximum number of hosts allowed to use the activation key. Should not be set if `unlimited_hosts` is set to `true`.
-- **unlimited_hosts** (Boolean) Should an unlimited number of hosts be allowed to use the activation key? Defaults to `true`.
+- `content_view_id` (Number) The ID of the content view to associate with the activation key.
+- `description` (String) A description of the activation key.
+- `environment_id` (Number) The ID of the environment that contains the `content_view_id`.
+- `host_collection_ids` (Set of Number) A list of host collection IDs to associate with the activation key. Machines activated with the key will be added to these host collections.
+- `max_hosts` (Number) The maximum number of hosts allowed to use the activation key. Should not be set if `unlimited_hosts` is set to `true`.
+- `unlimited_hosts` (Boolean) Should an unlimited number of hosts be allowed to use the activation key? Defaults to `true`.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

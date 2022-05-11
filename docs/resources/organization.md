@@ -37,17 +37,17 @@ resource "satellite_organization" "foo" {
 
 ### Required
 
-- **name** (String) The name of the organization.
+- `name` (String) The name of the organization.
 
 ### Optional
 
-- **description** (String) A description of the organization.
-- **id** (String) The ID of this resource.
-- **label** (String) The label of the organization. If not set, Satellite will use the `name` as the label.  This field can only be set at creation time. If not being set explicitly you will probably want to use `ignore_changes` on this in the lifecycle block.
+- `description` (String) A description of the organization.
+- `label` (String) The label of the organization. If not set, Satellite will use the `name` as the label.  This field can only be set at creation time. If not being set explicitly you will probably want to use `ignore_changes` on this in the lifecycle block.
 
 ### Read-Only
 
-- **hosts_count** (Number) A count of how many hosts are registered to the organization.
-- **title** (String) The title of the organization.
+- `hosts_count` (Number) A count of how many hosts are registered to the organization.
+- `id` (String) The ID of this resource.
+- `title` (String) The title of the organization.
 
 

@@ -23,20 +23,20 @@ data "satellite_permissions" "host_collection" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **search** (String) A search filter for the permission search. If not specified all permissions are returned.
+- `search` (String) A search filter for the permission search. If not specified all permissions are returned.
 
 ### Read-Only
 
-- **permissions** (List of Object) A list of permissions. (see [below for nested schema](#nestedatt--permissions))
+- `id` (String) The ID of this resource.
+- `permissions` (List of Object) A list of permissions. (see [below for nested schema](#nestedatt--permissions))
 
 <a id="nestedatt--permissions"></a>
 ### Nested Schema for `permissions`
 
 Read-Only:
 
-- **id** (Number)
-- **name** (String)
-- **resource_type** (String)
+- `id` (Number)
+- `name` (String)
+- `resource_type` (String)
 
 

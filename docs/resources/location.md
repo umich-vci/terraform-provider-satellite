@@ -30,12 +30,15 @@ resource "satellite_location" "Mos_Eisley" {
 
 ### Required
 
-- **name** (String) A name for the location.
+- `name` (String) A name for the location.
 
 ### Optional
 
-- **description** (String) A description of the location.
-- **id** (String) The ID of this resource.
-- **parent_id** (Number) The ID of a parent for this location. This allows you to nest locations. If not set, a top level location is created.
+- `description` (String) A description of the location.
+- `parent_id` (Number) The ID of a parent for this location. This allows you to nest locations. If not set, a top level location is created.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

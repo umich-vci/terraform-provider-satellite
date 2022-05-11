@@ -24,25 +24,22 @@ resource "satellite_subscription_manifest" "manifest" {
 
 ### Required
 
-- **manifest** (String, Sensitive) A Base64 encoded string of a manifest zip file downloaded from Red Hat Subscription Management. Most easily used in conjunction with [`rhsm_allocation_manifest` resource from the RHSM provider](https://registry.terraform.io/providers/umich-vci/rhsm/latest/docs/resources/allocation_manifest).
-- **organization_id** (Number) The organization ID you want to attach the manifest to.
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `manifest` (String, Sensitive) A Base64 encoded string of a manifest zip file downloaded from Red Hat Subscription Management. Most easily used in conjunction with [`rhsm_allocation_manifest` resource from the RHSM provider](https://registry.terraform.io/providers/umich-vci/rhsm/latest/docs/resources/allocation_manifest).
+- `organization_id` (Number) The organization ID you want to attach the manifest to.
 
 ### Read-Only
 
-- **history** (List of Object) A list of objects containing information on operations peformed on the manifest. (see [below for nested schema](#nestedatt--history))
+- `history` (List of Object) A list of objects containing information on operations peformed on the manifest. (see [below for nested schema](#nestedatt--history))
+- `id` (String) The ID of this resource.
 
 <a id="nestedatt--history"></a>
 ### Nested Schema for `history`
 
 Read-Only:
 
-- **created** (String)
-- **id** (String)
-- **status** (String)
-- **status_message** (String)
+- `created` (String)
+- `id` (String)
+- `status` (String)
+- `status_message` (String)
 
 
