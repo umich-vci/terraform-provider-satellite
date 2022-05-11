@@ -23,33 +23,30 @@ resource "satellite_auth_source_ldap" "ActiveDirectory" {
 
 ### Required
 
-- **search** (String) A search filter for the LDAP Authentication Source search. The search must only return 1 authentication source.
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `search` (String) A search filter for the LDAP Authentication Source search. The search must only return 1 authentication source.
 
 ### Read-Only
 
-- **account** (String) The DN of the LDAP Bind Account.
-- **attr_firstname** (String) The LDAP attribute that maps to first name.
-- **attr_lastname** (Number) The LDAP attribute that maps to last name.
-- **attr_login** (String) The LDAP attribute that maps to username.
-- **attr_mail** (String) The LDAP attribute that maps to email address.
-- **attr_photo** (Number) The LDAP attribute that maps to a photo.
-- **base_dn** (String) The base DN from which LDAP searches will be performed.
-- **created_at** (String) Timestamp of when the LDAP authentication source was created.
-- **groups_base** (String) The base DN from which LDAP searches for groups will be performed.
-- **host** (String) The hostname of the LDAP server.
-- **ldap_filter** (String) TODO
-- **name** (String) The name of the LDAP authentication source.
-- **onthefly_register** (Boolean) TODO
-- **port** (Number) The port the LDAP server is listening on.
-- **server_type** (String) The type of the LDAP server.
-- **tls** (Boolean) Is TLS enabled for the LDAP server?
-- **type** (String) TODO
-- **updated_at** (String) Timestamp of when the LDAP authentication source was last updated.
-- **use_netgroups** (Boolean) TODO
-- **usergroup_sync** (Boolean) TODO
+- `account` (String) The DN of the LDAP Bind Account.
+- `attr_firstname` (String) The LDAP attribute that maps to first name.
+- `attr_lastname` (Number) The LDAP attribute that maps to last name.
+- `attr_login` (String) The LDAP attribute that maps to username.
+- `attr_mail` (String) The LDAP attribute that maps to email address.
+- `attr_photo` (Number) The LDAP attribute that maps to a photo.
+- `base_dn` (String) The base DN from which LDAP searches will be performed.
+- `created_at` (String) Timestamp of when the LDAP authentication source was created.
+- `groups_base` (String) The base DN from which LDAP searches for groups will be performed.
+- `host` (String) The hostname of the LDAP server.
+- `id` (String) The ID of this resource.
+- `ldap_filter` (String) TODO
+- `name` (String) The name of the LDAP authentication source.
+- `onthefly_register` (Boolean) TODO
+- `port` (Number) The port the LDAP server is listening on.
+- `server_type` (String) The type of the LDAP server.
+- `tls` (Boolean) Is TLS enabled for the LDAP server?
+- `type` (String) TODO
+- `updated_at` (String) Timestamp of when the LDAP authentication source was last updated.
+- `use_netgroups` (Boolean) TODO
+- `usergroup_sync` (Boolean) TODO
 
 

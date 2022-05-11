@@ -24,28 +24,28 @@ resource "satellite_user_group" "my_group" {
 
 ### Required
 
-- **name** (String) A name for the user group.
+- `name` (String) A name for the user group.
 
 ### Optional
 
-- **admin** (Boolean) If set to true, then the group will grant administrator privileges.
-- **id** (String) The ID of this resource.
-- **role_ids** (Set of Number) A list of IDs of roles to associate with the group.
+- `admin` (Boolean) If set to true, then the group will grant administrator privileges.
+- `role_ids` (Set of Number) A list of IDs of roles to associate with the group.
 
 ### Read-Only
 
-- **created_at** (String) A timestamp containing when the user group was created.
-- **roles** (List of Object) A list of objects containing the roles the associated with the user group. (see [below for nested schema](#nestedatt--roles))
-- **updated_at** (String) A timestamp containing when the user group was last changed.
+- `created_at` (String) A timestamp containing when the user group was created.
+- `id` (String) The ID of this resource.
+- `roles` (List of Object) A list of objects containing the roles the associated with the user group. (see [below for nested schema](#nestedatt--roles))
+- `updated_at` (String) A timestamp containing when the user group was last changed.
 
 <a id="nestedatt--roles"></a>
 ### Nested Schema for `roles`
 
 Read-Only:
 
-- **description** (String)
-- **id** (Number)
-- **name** (String)
-- **origin** (String)
+- `description` (String)
+- `id` (Number)
+- `name` (String)
+- `origin` (String)
 
 

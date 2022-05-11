@@ -24,29 +24,29 @@ data "satellite_products" "rh_products" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **organization_id** (Number) An Organization ID to filter the product search on.
-- **product_name** (String) A product name to filter the product search on.
-- **red_hat_only** (Boolean) A boolean that controls if the search should only return Red Hat products.
+- `organization_id` (Number) An Organization ID to filter the product search on.
+- `product_name` (String) A product name to filter the product search on.
+- `red_hat_only` (Boolean) A boolean that controls if the search should only return Red Hat products.
 
 ### Read-Only
 
-- **products** (List of Object) A list of objects containing information on the products. (see [below for nested schema](#nestedatt--products))
+- `id` (String) The ID of this resource.
+- `products` (List of Object) A list of objects containing information on the products. (see [below for nested schema](#nestedatt--products))
 
 <a id="nestedatt--products"></a>
 ### Nested Schema for `products`
 
 Read-Only:
 
-- **cp_id** (String)
-- **description** (String)
-- **gpg_key_id** (Number)
-- **id** (Number)
-- **label** (String)
-- **last_sync** (String)
-- **last_sync_words** (String)
-- **name** (String)
-- **provider_id** (Number)
-- **repository_count** (Number)
+- `cp_id` (String)
+- `description` (String)
+- `gpg_key_id` (Number)
+- `id` (Number)
+- `label` (String)
+- `last_sync` (String)
+- `last_sync_words` (String)
+- `name` (String)
+- `provider_id` (Number)
+- `repository_count` (Number)
 
 

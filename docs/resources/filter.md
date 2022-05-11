@@ -32,27 +32,27 @@ resource "satellite_filter" "miscellaneous" {
 
 ### Required
 
-- **permission_names** (Set of String) A list of permission names that should be enabled in the filter. The permission names must be valid for the role specified in `resource_type`.
-- **resource_type** (String) The resource type of the filter.  Once this is set, it cannot be changed without recreating the filter.
-- **role_id** (Number) The ID of the role that the filter should be created under.
+- `permission_names` (Set of String) A list of permission names that should be enabled in the filter. The permission names must be valid for the role specified in `resource_type`.
+- `resource_type` (String) The resource type of the filter.  Once this is set, it cannot be changed without recreating the filter.
+- `role_id` (Number) The ID of the role that the filter should be created under.
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **location_ids** (Set of Number) A list of IDs of locations to associate with the filter. Unless `override` is set to `true` this should generally contain the `location_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.
-- **organization_ids** (Set of Number) A list of IDs of organizations to associate with the filter. Unless `override` is set to `true` this should generally contain the `organization_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.
-- **override** (Boolean) When set to true, you can specify `location_ids` and `organization_ids` to allow the role to access the `resource_type` in the specified locations and organizations.
-- **search** (String) If this is not set, then the filter will apply to all objects of the specified resource type. This means the value of `unlimited` will be true.  You can specify a search which can be used to limit the resources that the permission applies to. This will result in the value of `unlimited` being false. For more information see the [Red Hat documentation](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.8/html/administering_red_hat_satellite/chap-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles#sect-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles-Granular_Permission_Filtering).
+- `location_ids` (Set of Number) A list of IDs of locations to associate with the filter. Unless `override` is set to `true` this should generally contain the `location_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.
+- `organization_ids` (Set of Number) A list of IDs of organizations to associate with the filter. Unless `override` is set to `true` this should generally contain the `organization_ids` that the parent role is associated with. It may also need to be set to an empty list if you desire the permission to be `unlimited`.
+- `override` (Boolean) When set to true, you can specify `location_ids` and `organization_ids` to allow the role to access the `resource_type` in the specified locations and organizations.
+- `search` (String) If this is not set, then the filter will apply to all objects of the specified resource type. This means the value of `unlimited` will be true.  You can specify a search which can be used to limit the resources that the permission applies to. This will result in the value of `unlimited` being false. For more information see the [Red Hat documentation](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.8/html/administering_red_hat_satellite/chap-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles#sect-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Users_and_Roles-Granular_Permission_Filtering).
 
 ### Read-Only
 
-- **created_at** (String) A timestamp of when the filter was created.
-- **locations** (List of Map of String) A list of objects containing the locations the filter applies to.
-- **organizations** (List of Map of String) A list of objects containing the organizations the filter applies to.
-- **permission_ids** (Set of Number) A list of permission IDs that match the list of permissions supplied in `permission_names`.
-- **permissions** (Set of Map of String) A list of objects containing the permissions enabled in the filter.
-- **role** (Map of String) An object containing information about the role the filter is associated with.
-- **unlimited** (Boolean) A boolean that indicates if a filter applies to all resources of the `resource_type` or just a subset of resources specified in `search`.
-- **updated_at** (String) A timestamp of when the filter was last updated.
+- `created_at` (String) A timestamp of when the filter was created.
+- `id` (String) The ID of this resource.
+- `locations` (List of Map of String) A list of objects containing the locations the filter applies to.
+- `organizations` (List of Map of String) A list of objects containing the organizations the filter applies to.
+- `permission_ids` (Set of Number) A list of permission IDs that match the list of permissions supplied in `permission_names`.
+- `permissions` (Set of Map of String) A list of objects containing the permissions enabled in the filter.
+- `role` (Map of String) An object containing information about the role the filter is associated with.
+- `unlimited` (Boolean) A boolean that indicates if a filter applies to all resources of the `resource_type` or just a subset of resources specified in `search`.
+- `updated_at` (String) A timestamp of when the filter was last updated.
 
 

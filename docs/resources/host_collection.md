@@ -33,19 +33,19 @@ resource "satellite_host_collection" "limited_host_collection" {
 
 ### Required
 
-- **name** (String) The name of the host collection.
-- **organization_id** (Number) The ID of organization that the host collection should be created in. Once set, it cannot be changed without recreating the resource.
+- `name` (String) The name of the host collection.
+- `organization_id` (Number) The ID of organization that the host collection should be created in. Once set, it cannot be changed without recreating the resource.
 
 ### Optional
 
-- **description** (String) A description of the host collection.
-- **id** (String) The ID of this resource.
-- **max_hosts** (Number) The maximum number of hosts allowed to be in the host collection. Should not be set if `unlimited_hosts` is set to `true`.
-- **unlimited_hosts** (Boolean) A boolean that controls if an unlimited number of members are allowed in the host collection. Defaults to `true`.
+- `description` (String) A description of the host collection.
+- `max_hosts` (Number) The maximum number of hosts allowed to be in the host collection. Should not be set if `unlimited_hosts` is set to `true`.
+- `unlimited_hosts` (Boolean) A boolean that controls if an unlimited number of members are allowed in the host collection. Defaults to `true`.
 
 ### Read-Only
 
-- **created_at** (String) A timestamp containing when the host collection was created.
-- **updated_at** (String) A timestamp containing when the host collection was last changed.
+- `created_at` (String) A timestamp containing when the host collection was created.
+- `id` (String) The ID of this resource.
+- `updated_at` (String) A timestamp containing when the host collection was last changed.
 
 

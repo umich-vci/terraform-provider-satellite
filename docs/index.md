@@ -25,10 +25,10 @@ provider "satellite" {
 
 ### Required
 
-- **password** (String, Sensitive) This is the password to use to access the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_PASSWORD`.
-- **satellite_host** (String) This is the hostname or IP address of the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_HOST`.
-- **username** (String) This is the username to use to access the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_USERNAME`.
+- `password` (String, Sensitive) This is the password to use to access the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_PASSWORD`.
+- `satellite_host` (String) This is the hostname or IP address of the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_HOST`.
+- `username` (String) This is the username to use to access the Red Hat Satellite server. This must be provided in the config or in the environment variable `SATELLITE_USERNAME`.
 
 ### Optional
 
-- **ssl_verify** (Boolean) Should we validate the SSL certificate presented by the Satellite server?. Defaults to `true`.
+- `ssl_verify` (Boolean) Should we validate the SSL certificate presented by the Satellite server?. Defaults to `true`.

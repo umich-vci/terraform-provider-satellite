@@ -27,19 +27,16 @@ output "default_org_id" {
 
 ### Required
 
-- **search** (String) A search filter for the Location search. The search must only return 1 Organization.
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `search` (String) A search filter for the Location search. The search must only return 1 Organization.
 
 ### Read-Only
 
-- **created_at** (String) Timestamp of when the organization was created.
-- **description** (String) The description of the organization.
-- **label** (String) The label of the organization.
-- **name** (String) The name of the organization.
-- **title** (String) The title of the organization.
-- **updated_at** (String) Timestamp of when the organization was last updated.
+- `created_at` (String) Timestamp of when the organization was created.
+- `description` (String) The description of the organization.
+- `id` (String) The ID of this resource.
+- `label` (String) The label of the organization.
+- `name` (String) The name of the organization.
+- `title` (String) The title of the organization.
+- `updated_at` (String) Timestamp of when the organization was last updated.
 
 

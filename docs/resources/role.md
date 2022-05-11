@@ -25,33 +25,33 @@ resource "satellite_role" "my_role" {
 
 ### Required
 
-- **name** (String) A name for the role.
+- `name` (String) A name for the role.
 
 ### Optional
 
-- **description** (String) A description of the role.
-- **id** (String) The ID of this resource.
-- **location_ids** (Set of Number) A list of IDs of locations to associate with the role.
-- **organization_ids** (Set of Number) A list of IDs of organizations to associate with the role.
+- `description` (String) A description of the role.
+- `location_ids` (Set of Number) A list of IDs of locations to associate with the role.
+- `organization_ids` (Set of Number) A list of IDs of organizations to associate with the role.
 
 ### Read-Only
 
-- **builtin** (Number) A boolean that indicates if the role is a default/builtin role.
-- **cloned_from_id** (Number) If this role was cloned using the API, the ID number of the source role.
-- **filters** (List of Number) A list of filter IDs associated with the role.
-- **locations** (List of Object) A list of objects containing the locations the role applies to. (see [below for nested schema](#nestedatt--locations))
-- **organizations** (List of Object) A list of objects containing the organizations the role applies to. (see [below for nested schema](#nestedatt--organizations))
-- **origin** (String) TODO
+- `builtin` (Number) A boolean that indicates if the role is a default/builtin role.
+- `cloned_from_id` (Number) If this role was cloned using the API, the ID number of the source role.
+- `filters` (List of Number) A list of filter IDs associated with the role.
+- `id` (String) The ID of this resource.
+- `locations` (List of Object) A list of objects containing the locations the role applies to. (see [below for nested schema](#nestedatt--locations))
+- `organizations` (List of Object) A list of objects containing the organizations the role applies to. (see [below for nested schema](#nestedatt--organizations))
+- `origin` (String) TODO
 
 <a id="nestedatt--locations"></a>
 ### Nested Schema for `locations`
 
 Read-Only:
 
-- **description** (String)
-- **id** (Number)
-- **name** (String)
-- **title** (String)
+- `description` (String)
+- `id` (Number)
+- `name` (String)
+- `title` (String)
 
 
 <a id="nestedatt--organizations"></a>
@@ -59,9 +59,9 @@ Read-Only:
 
 Read-Only:
 
-- **description** (String)
-- **id** (Number)
-- **name** (String)
-- **title** (String)
+- `description` (String)
+- `id` (Number)
+- `name` (String)
+- `title` (String)
 
 

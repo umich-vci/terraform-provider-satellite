@@ -23,20 +23,17 @@ resource "satellite_location" "Tatooine" {
 
 ### Required
 
-- **search** (String) A search filter for the Location search. The search must only return 1 Location.
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `search` (String) A search filter for the Location search. The search must only return 1 Location.
 
 ### Read-Only
 
-- **created_at** (String) Timestamp of when the location was created.
-- **description** (String) A description of the location.
-- **name** (String) The name of the location.
-- **parent_id** (Number) The ID of the parent for this location.  If not set, the location is a top level location.
-- **parent_name** (String) The name of the parent for this location.  If not set, the location is a top level location.
-- **title** (String) The title of the location.
-- **updated_at** (String) Timestamp of when the location was last updated.
+- `created_at` (String) Timestamp of when the location was created.
+- `description` (String) A description of the location.
+- `id` (String) The ID of this resource.
+- `name` (String) The name of the location.
+- `parent_id` (Number) The ID of the parent for this location.  If not set, the location is a top level location.
+- `parent_name` (String) The name of the parent for this location.  If not set, the location is a top level location.
+- `title` (String) The title of the location.
+- `updated_at` (String) Timestamp of when the location was last updated.
 
 

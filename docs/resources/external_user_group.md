@@ -24,16 +24,13 @@ resource "satellite_external_user_group" "my_ldap_group" {
 
 ### Required
 
-- **auth_source_id** (Number) The ID of the authentication source that contains the external user group.
-- **name** (String) The name of the external user group.
-- **user_group_id** (Number) The ID of the user group that the external user group should be associated with.
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `auth_source_id` (Number) The ID of the authentication source that contains the external user group.
+- `name` (String) The name of the external user group.
+- `user_group_id` (Number) The ID of the user group that the external user group should be associated with.
 
 ### Read-Only
 
-- **auth_source_ldap** (Map of String) A list of objects containing the authentication source the associated with the external user group.
+- `auth_source_ldap` (Map of String) A list of objects containing the authentication source the associated with the external user group.
+- `id` (String) The ID of this resource.
 
 
