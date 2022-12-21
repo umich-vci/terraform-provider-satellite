@@ -1,3 +1,11 @@
+## 0.6.0 (December 21, 2022)
+
+ENHANCEMENTS:
+
+* Add additional filter resource types from Satellite 6.10
+* Updated [terraform-plugin-sdk](https://github.com/hashicorp/terraform-plugin-sdk) to 2.24.1.
+* Updated [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs) to 0.13.0.
+
 ## 0.5.0 (February 25, 2022)
 
 ENHANCEMENTS:

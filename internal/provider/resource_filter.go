@@ -505,6 +505,8 @@ var resourceTypeList = []string{
 	"FactValue",
 	"Filter",
 	"ForemanOpenscap::ArfReport",
+	"ForemanOpenscap::OvalContent",
+	"ForemanOpenscap::OvalPolicy",
 	"ForemanOpenscap::Policy",
 	"ForemanOpenscap::ScapContent",
 	"ForemanOpenscap::TailoringFile",
