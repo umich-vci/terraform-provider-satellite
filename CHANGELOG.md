@@ -1,3 +1,13 @@
+## 0.7.0 (January 25, 2023)
+
+ENHANCEMENTS:
+
+* Add additional filter resource types from Satellite 6.11
+
+BREAKING CHANGES:
+
+* Filters resource types no longer valid in Satellite 6.11 have been removed.
+
 ## 0.6.0 (December 21, 2022)
 
 ENHANCEMENTS:
