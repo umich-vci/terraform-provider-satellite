@@ -48,5 +48,3 @@ resource "satellite_auth_source_ldap" "ActiveDirectory" {
 - `updated_at` (String) Timestamp of when the LDAP authentication source was last updated.
 - `use_netgroups` (Boolean) TODO
 - `usergroup_sync` (Boolean) TODO
-
-

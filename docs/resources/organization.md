@@ -49,5 +49,3 @@ resource "satellite_organization" "foo" {
 - `hosts_count` (Number) A count of how many hosts are registered to the organization.
 - `id` (String) The ID of this resource.
 - `title` (String) The title of the organization.
-
-

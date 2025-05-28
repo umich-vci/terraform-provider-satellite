@@ -35,5 +35,3 @@ resource "satellite_location" "Tatooine" {
 - `parent_name` (String) The name of the parent for this location.  If not set, the location is a top level location.
 - `title` (String) The title of the location.
 - `updated_at` (String) Timestamp of when the location was last updated.
-
-

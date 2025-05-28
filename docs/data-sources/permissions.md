@@ -38,5 +38,3 @@ Read-Only:
 - `id` (Number)
 - `name` (String)
 - `resource_type` (String)
-
-

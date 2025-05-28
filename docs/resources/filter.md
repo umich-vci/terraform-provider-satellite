@@ -54,5 +54,3 @@ resource "satellite_filter" "miscellaneous" {
 - `role` (Map of String) An object containing information about the role the filter is associated with.
 - `unlimited` (Boolean) A boolean that indicates if a filter applies to all resources of the `resource_type` or just a subset of resources specified in `search`.
 - `updated_at` (String) A timestamp of when the filter was last updated.
-
-
