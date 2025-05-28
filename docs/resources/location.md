@@ -40,5 +40,3 @@ resource "satellite_location" "Mos_Eisley" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-

@@ -38,5 +38,3 @@ output "default_org_id" {
 - `name` (String) The name of the organization.
 - `title` (String) The title of the organization.
 - `updated_at` (String) Timestamp of when the organization was last updated.
-
-

@@ -54,5 +54,3 @@ resource "satellite_content_view" "default" {
 - `updated_at` (String) Timestamp of when the Content View was last updated.
 - `version_count` (Number) The number of versions of the Content View.
 - `versions` (List of Number) A list of the versions of the Content View.
-
-

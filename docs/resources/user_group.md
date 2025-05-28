@@ -47,5 +47,3 @@ Read-Only:
 - `id` (Number)
 - `name` (String)
 - `origin` (String)
-
-

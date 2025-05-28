@@ -48,5 +48,3 @@ Read-Only:
 - `name` (String)
 - `provider_id` (Number)
 - `repository_count` (Number)
-
-

@@ -47,5 +47,3 @@ resource "satellite_host_collection" "limited_host_collection" {
 - `created_at` (String) A timestamp containing when the host collection was created.
 - `id` (String) The ID of this resource.
 - `updated_at` (String) A timestamp containing when the host collection was last changed.
-
-

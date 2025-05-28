@@ -32,5 +32,3 @@ resource "satellite_external_user_group" "my_ldap_group" {
 
 - `auth_source_ldap` (Map of String) A list of objects containing the authentication source the associated with the external user group.
 - `id` (String) The ID of this resource.
-
-

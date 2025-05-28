@@ -43,5 +43,3 @@ resource "satellite_lifecycle_environment" "library" {
 - `registry_unauthenticated_pull` (Boolean) TODO
 - `successor` (Map of String) The Lifecycle Environment directly after this one.
 - `updated_at` (String) Timestamp of when the Lifecycle Environment was last updated.
-
-

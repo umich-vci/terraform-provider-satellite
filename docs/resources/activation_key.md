@@ -38,5 +38,3 @@ resource "satellite_activation_key" "key" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-
